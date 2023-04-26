@@ -10,7 +10,11 @@
 		FF07E9BA29ED5AA700872D26 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF07E9B929ED5AA700872D26 /* Errors.swift */; };
 		FF07E9BC29EE699400872D26 /* Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF07E9BB29EE699400872D26 /* Codable.swift */; };
 		FF07E9BE29EE9BA100872D26 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF07E9BD29EE9BA000872D26 /* MainView.swift */; };
+		FF68F78729F6BBB400DDACA7 /* CollectionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF68F78629F6BBB300DDACA7 /* CollectionTableViewCell.swift */; };
+		FF68F78929F6BC2600DDACA7 /* WeatherCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF68F78829F6BC2600DDACA7 /* WeatherCollectionViewCell.swift */; };
+		FF68F78D29F7EE5200DDACA7 /* TextPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF68F78C29F7EE5200DDACA7 /* TextPicker.swift */; };
 		FF793CFA29EEBD9E0081E858 /* DaytimeWeatherTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF793CF929EEBD9E0081E858 /* DaytimeWeatherTableViewCell.swift */; };
+		FF793CFC29F287890081E858 /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF793CFB29F287890081E858 /* JSON.swift */; };
 		FFFF234329E531070036F8EC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFFF234229E531070036F8EC /* AppDelegate.swift */; };
 		FFFF234529E531070036F8EC /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFFF234429E531070036F8EC /* SceneDelegate.swift */; };
 		FFFF234729E531070036F8EC /* AllowDeviceLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFFF234629E531070036F8EC /* AllowDeviceLocationViewController.swift */; };
@@ -32,7 +36,11 @@
 		FF07E9B929ED5AA700872D26 /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
 		FF07E9BB29EE699400872D26 /* Codable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Codable.swift; sourceTree = "<group>"; };
 		FF07E9BD29EE9BA000872D26 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		FF68F78629F6BBB300DDACA7 /* CollectionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionTableViewCell.swift; sourceTree = "<group>"; };
+		FF68F78829F6BC2600DDACA7 /* WeatherCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherCollectionViewCell.swift; sourceTree = "<group>"; };
+		FF68F78C29F7EE5200DDACA7 /* TextPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextPicker.swift; sourceTree = "<group>"; };
 		FF793CF929EEBD9E0081E858 /* DaytimeWeatherTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaytimeWeatherTableViewCell.swift; sourceTree = "<group>"; };
+		FF793CFB29F287890081E858 /* JSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
 		FFFF233F29E531070036F8EC /* WeatherApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WeatherApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FFFF234229E531070036F8EC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FFFF234429E531070036F8EC /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -71,6 +79,27 @@
 			path = Errors;
 			sourceTree = "<group>";
 		};
+		FF68F78A29F6BCC900DDACA7 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				FFFF234629E531070036F8EC /* AllowDeviceLocationViewController.swift */,
+				FFFF236029E5427B0036F8EC /* MainViewController.swift */,
+				FF793CF929EEBD9E0081E858 /* DaytimeWeatherTableViewCell.swift */,
+				FF07E9BD29EE9BA000872D26 /* MainView.swift */,
+				FF68F78629F6BBB300DDACA7 /* CollectionTableViewCell.swift */,
+				FF68F78829F6BC2600DDACA7 /* WeatherCollectionViewCell.swift */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
+		FF68F78B29F7EE4500DDACA7 /* Pickers */ = {
+			isa = PBXGroup;
+			children = (
+				FF68F78C29F7EE5200DDACA7 /* TextPicker.swift */,
+			);
+			path = Pickers;
+			sourceTree = "<group>";
+		};
 		FFFF233629E531070036F8EC = {
 			isa = PBXGroup;
 			children = (
@@ -90,14 +119,12 @@
 		FFFF234129E531070036F8EC /* WeatherApp */ = {
 			isa = PBXGroup;
 			children = (
+				FF68F78B29F7EE4500DDACA7 /* Pickers */,
 				FF07E9B829ED5A9600872D26 /* Errors */,
 				FFFF236429E543220036F8EC /* Download Manager */,
 				FFFF235F29E5409F0036F8EC /* Core Data */,
 				FFFF235B29E53C1A0036F8EC /* App */,
-				FFFF234629E531070036F8EC /* AllowDeviceLocationViewController.swift */,
-				FFFF236029E5427B0036F8EC /* MainViewController.swift */,
-				FF793CF929EEBD9E0081E858 /* DaytimeWeatherTableViewCell.swift */,
-				FF07E9BD29EE9BA000872D26 /* MainView.swift */,
+				FF68F78A29F6BCC900DDACA7 /* Main */,
 				FFFF236229E542F60036F8EC /* DetailsViewController.swift */,
 				FFFF236729E5436B0036F8EC /* DailyViewController.swift */,
 				FFFF236929E5453F0036F8EC /* SettingsViewController.swift */,
@@ -133,6 +160,7 @@
 			children = (
 				FFFF236529E543360036F8EC /* DownloadManager.swift */,
 				FF07E9BB29EE699400872D26 /* Codable.swift */,
+				FF793CFB29F287890081E858 /* JSON.swift */,
 			);
 			path = "Download Manager";
 			sourceTree = "<group>";
@@ -218,8 +246,11 @@
 				FFFF237429E6D03F0036F8EC /* Custom.swift in Sources */,
 				FFFF236829E5436B0036F8EC /* DailyViewController.swift in Sources */,
 				FF793CFA29EEBD9E0081E858 /* DaytimeWeatherTableViewCell.swift in Sources */,
+				FF68F78929F6BC2600DDACA7 /* WeatherCollectionViewCell.swift in Sources */,
+				FF68F78D29F7EE5200DDACA7 /* TextPicker.swift in Sources */,
 				FF07E9BC29EE699400872D26 /* Codable.swift in Sources */,
 				FFFF234329E531070036F8EC /* AppDelegate.swift in Sources */,
+				FF68F78729F6BBB400DDACA7 /* CollectionTableViewCell.swift in Sources */,
 				FFFF236629E543360036F8EC /* DownloadManager.swift in Sources */,
 				FFFF236A29E5453F0036F8EC /* SettingsViewController.swift in Sources */,
 				FF07E9BA29ED5AA700872D26 /* Errors.swift in Sources */,
@@ -227,6 +258,7 @@
 				FFFF235A29E531500036F8EC /* CoreDataManager.swift in Sources */,
 				FFFF237629E81B850036F8EC /* TabBarController.swift in Sources */,
 				FFFF234529E531070036F8EC /* SceneDelegate.swift in Sources */,
+				FF793CFC29F287890081E858 /* JSON.swift in Sources */,
 				FF07E9BE29EE9BA100872D26 /* MainView.swift in Sources */,
 				FFFF236329E542F60036F8EC /* DetailsViewController.swift in Sources */,
 			);

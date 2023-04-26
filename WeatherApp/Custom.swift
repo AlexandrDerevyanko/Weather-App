@@ -46,10 +46,6 @@ final class CustomButton: UIButton {
         filled.background.cornerRadius = 12
         filled.titleAlignment = alignment
         super.init(frame: .zero)
-//        layer.shadowOffset = CGSize(width: 2, height: 2)
-//        layer.shadowRadius = 2
-//        layer.shadowColor = UIColor.black.cgColor
-//        layer.shadowOpacity = 0.7
         isHidden = hidden
         translatesAutoresizingMaskIntoConstraints = false
         addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
@@ -65,4 +61,3 @@ final class CustomButton: UIButton {
         buttonAction()
     }
 }
-

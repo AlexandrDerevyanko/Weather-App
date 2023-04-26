@@ -21,6 +21,8 @@ class AllowDeviceLocationViewController: UIViewController {
         locationManager = CLLocationManager()
         locationManager?.delegate = self
         setupUI()
+        locationManager?.requestAlwaysAuthorization()
+        locationManager?.startUpdatingLocation()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -85,16 +87,14 @@ extension AllowDeviceLocationViewController: CLLocationManagerDelegate {
         let myLatitude: String = String(format: "%f", (self.locationManager?.location!.coordinate.latitude)!)
         let myLongitude: String = String(format:"%f", (self.locationManager?.location!.coordinate.longitude)!)
 
-        DownloadManager.defaultManager.download(lat: myLatitude, lon: myLongitude) { weatherCodable, error in
-            if error != nil {
-                return
-            }
-            CoreDataManager.defaultManager.checkData(data: weatherCodable as! Weather) { success in
+        DownloadManager.defaultManager.downloadWeatherDataFromCoordinates(lat: myLatitude, lon: myLongitude) { weatherData, error in
+            guard let weatherData else { return }
+            CoreDataManager.defaultManager.dataUpload(data: weatherData as! Weather) { success in
                 if success {
                     DispatchQueue.main.async {
                         self.checkLocation()
                     }
-                    
+
                 }
             }
         }

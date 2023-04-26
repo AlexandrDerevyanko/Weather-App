@@ -1,0 +1,169 @@
+//
+//  MainViewController.swift
+//  WeatherApp
+//
+//  Created by Aleksandr Derevyanko on 11.04.2023.
+//
+
+import UIKit
+import CoreLocation
+import CoreData
+
+class MainViewController: UIViewController, NSFetchedResultsControllerDelegate {
+    
+    var currentData: CurrentData? {
+        CoreDataManager.defaultManager.currentData[0] 
+    }
+    
+    var dataByDayFetchResultsController: NSFetchedResultsController<DataByDay>?
+
+    func initFetchResultsController() {
+        let firstFetchRequest = DataByDay.fetchRequest()
+        firstFetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
+        dataByDayFetchResultsController = NSFetchedResultsController(fetchRequest: firstFetchRequest, managedObjectContext: CoreDataManager.defaultManager.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+        dataByDayFetchResultsController?.delegate = self
+        try? dataByDayFetchResultsController?.performFetch()
+    }
+    
+    private lazy var tableView: UITableView = {
+        let tableView = UITableView(frame: .zero, style: .grouped)
+        tableView.backgroundColor = .systemBackground
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.register(DaytimeWeatherTableViewCell.self, forCellReuseIdentifier: "DaytimeWeatherCell")
+        tableView.register(CollectionTableViewCell.self, forCellReuseIdentifier: "CollectionCell")
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "DefaultCell")
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        return tableView
+    }()
+        
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupUI()
+        navigationItem.setHidesBackButton(true, animated: true)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        initFetchResultsController()
+        if currentData?.location != nil {
+            self.title = "\(currentData?.location ?? "")"
+        }
+        initFetchResultsController()
+        tableView.reloadData()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        let appearance = UINavigationBarAppearance()
+        appearance.backgroundColor = .systemGray6
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.black]
+        appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.black]
+        navigationController?.navigationBar.tintColor = .black
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.compactAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+    }
+
+    private func setupUI() {
+        view.backgroundColor = .systemBlue
+        view.addSubview(tableView)
+        setupConstraints()
+        setupButtons()
+    }
+    
+    private func setupConstraints() {
+        tableView.snp.makeConstraints { make in
+            make.edges.equalTo(view)
+        }
+    }
+    
+    private func setupButtons() {
+        let leftButton = UIBarButtonItem(image: UIImage(systemName: "line.horizontal.3"), style: .plain, target: self, action: #selector(leftButtonPressed))
+        let rightButton = UIBarButtonItem(image: UIImage(systemName: "location"), style: .plain, target: self, action: #selector(rightButtonPressed))
+        navigationItem.rightBarButtonItem = rightButton
+        navigationItem.leftBarButtonItem = leftButton
+    }
+    
+    static func push(in viewController: UIViewController, with location: String) {
+        DownloadManager.defaultManager.downloadWeatherDataFromString(location: location) { weatherData, error in
+            guard let weatherData else { return }
+            CoreDataManager.defaultManager.dataUpload(data: weatherData as! Weather) { success in
+                if success {
+                    DispatchQueue.main.async {
+                        let vc = MainViewController()
+                        viewController.navigationController?.pushViewController(vc, animated: true)
+                    }
+                }
+            }
+        }
+        
+    }
+    
+    @objc
+    private func leftButtonPressed() {
+        print(123)
+    }
+    
+    @objc
+    private func rightButtonPressed() {
+        TextPicker.defaultPicker.getText(showPickerIn: self, title: "123", message: "123") { text in
+            MainViewController.push(in: self, with: text)
+        }
+    }
+
+}
+
+extension MainViewController: UITableViewDataSource, UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if section == 0 {
+            let cell = MainView()
+            let data = currentData ?? nil
+            cell.data = data
+            cell.setup()
+            return cell
+        }
+        return nil
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return "Ежедневный прогноз"
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
+        
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if section == 0 {
+            return 1
+        }
+        return dataByDayFetchResultsController?.fetchedObjects?.count ?? 0
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.section == 0 {
+            return 116
+        }
+        return UITableView.automaticDimension
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if indexPath.section == 0 {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "CollectionCell", for: indexPath) as? CollectionTableViewCell else {
+                preconditionFailure("Error")
+            }
+            return cell
+        }
+        
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "DaytimeWeatherCell", for: indexPath) as? DaytimeWeatherTableViewCell else {
+            preconditionFailure("Error")
+        }
+        cell.accessoryType = .disclosureIndicator
+        cell.data = dataByDayFetchResultsController?.fetchedObjects?[indexPath.row]
+        cell.setup()
+        return cell
+    }
+}
