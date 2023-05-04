@@ -14,8 +14,8 @@
             filePath = "WeatherApp/Main/AllowDeviceLocationViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "107"
-            endingLineNumber = "107"
+            startingLineNumber = "93"
+            endingLineNumber = "93"
             landmarkName = "locationManager(_:didUpdateLocations:)"
             landmarkType = "7">
             <Locations>
@@ -48,54 +48,6 @@
                   startingLineNumber = "106"
                   endingLineNumber = "106"
                   offsetFromSymbolStart = "44">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "2DAC0F41-1515-4C3B-8D28-3CC103FFD2CF"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "WeatherApp/Main/AllowDeviceLocationViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "90"
-            endingLineNumber = "90"
-            landmarkName = "download()"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "2DAC0F41-1515-4C3B-8D28-3CC103FFD2CF - edf9b62d1e32a407"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "WeatherApp.AllowDeviceLocationViewController.download(completion: (Swift.Bool) -&gt; ()) -&gt; ()"
-                  moduleName = "WeatherApp"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/aleksandrderevyanko/Desktop/Study/CourseWork/Weather/WeatherApp/WeatherApp/Main/AllowDeviceLocationViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "90"
-                  endingLineNumber = "90"
-                  offsetFromSymbolStart = "612">
-               </Location>
-               <Location
-                  uuid = "2DAC0F41-1515-4C3B-8D28-3CC103FFD2CF - edf9b62d1e32a407"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "WeatherApp.AllowDeviceLocationViewController.download(completion: (Swift.Bool) -&gt; ()) -&gt; ()"
-                  moduleName = "WeatherApp"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/aleksandrderevyanko/Desktop/Study/CourseWork/Weather/WeatherApp/WeatherApp/Main/AllowDeviceLocationViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "90"
-                  endingLineNumber = "90"
-                  offsetFromSymbolStart = "1292">
                </Location>
             </Locations>
          </BreakpointContent>

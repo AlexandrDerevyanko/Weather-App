@@ -23,15 +23,15 @@ class AllowDeviceLocationViewController: UIViewController {
         locationManager = CLLocationManager()
         locationManager?.delegate = self
         setupUI()
-        locationManager?.requestAlwaysAuthorization()
-        locationManager?.startUpdatingLocation()
+//        locationManager?.requestAlwaysAuthorization()
+//        locationManager?.startUpdatingLocation()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        DispatchQueue.main.async {
-            self.checkData()
-        }
+//        DispatchQueue.main.async {
+////            self.checkData()
+//        }
         
     }
     
@@ -64,11 +64,11 @@ class AllowDeviceLocationViewController: UIViewController {
         }
     }
     
-    func checkData() {
-        if locationManager?.location != nil {
-            
-        }
-    }
+//    func checkData() {
+//        if locationManager?.location != nil {
+//
+//        }
+//    }
 
     @objc
     private func allowLocationButtonpressed() {
@@ -86,6 +86,11 @@ class AllowDeviceLocationViewController: UIViewController {
 extension AllowDeviceLocationViewController: CLLocationManagerDelegate {
     
     func download() {
+
+    }
+
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        download()
         let myLatitude: String = String(format: "%f", (self.locationManager?.location!.coordinate.latitude)!)
         let myLongitude: String = String(format:"%f", (self.locationManager?.location!.coordinate.longitude)!)
         DownloadManager.defaultManager.downloadWeatherDataFromCoordinates(lat: myLatitude, lon: myLongitude) { [self] weatherData, error in
@@ -101,11 +106,6 @@ extension AllowDeviceLocationViewController: CLLocationManagerDelegate {
                 }
             }
         }
-    }
-
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        download()
-//        checkLocation()
     }
     
 }
