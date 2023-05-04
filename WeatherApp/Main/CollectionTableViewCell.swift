@@ -11,6 +11,8 @@ import CoreData
 class CollectionTableViewCell: UITableViewCell, NSFetchedResultsControllerDelegate {
     
     var dataByHour: [DataByHour]?
+    var dataByDay: DataByDay?
+    var viewController: UIViewController?
     
     private lazy var layout: UICollectionViewFlowLayout = {
         let layout = UICollectionViewFlowLayout()
@@ -69,6 +71,7 @@ class CollectionTableViewCell: UITableViewCell, NSFetchedResultsControllerDelega
 }
 
 extension CollectionTableViewCell: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 24
     }
@@ -107,6 +110,12 @@ extension CollectionTableViewCell: UICollectionViewDelegateFlowLayout, UICollect
 //
 //    }
 //
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let hourlyDataVC = HourlyDataViewController()
+        hourlyDataVC.data = dataByDay
+        self.viewController?.navigationController?.pushViewController(hourlyDataVC, animated: true)
+        
+    }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
     }

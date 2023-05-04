@@ -8,8 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		FF07E9BA29ED5AA700872D26 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF07E9B929ED5AA700872D26 /* Errors.swift */; };
-		FF07E9BC29EE699400872D26 /* Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF07E9BB29EE699400872D26 /* Codable.swift */; };
 		FF07E9BE29EE9BA100872D26 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF07E9BD29EE9BA000872D26 /* MainView.swift */; };
+		FF50ACF629F936260049382A /* SettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF50ACF529F936260049382A /* SettingsTableViewCell.swift */; };
+		FF6865682A011B5B000916BE /* HourlyDataCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6865672A011B5B000916BE /* HourlyDataCell.swift */; };
+		FF68656A2A01408F000916BE /* DailyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6865692A01408F000916BE /* DailyTableViewCell.swift */; };
+		FF68656C2A025104000916BE /* SunAndMoonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF68656B2A025104000916BE /* SunAndMoonTableViewCell.swift */; };
+		FF68656E2A0283FF000916BE /* DailyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF68656D2A0283FF000916BE /* DailyView.swift */; };
+		FF6865732A028B06000916BE /* HourlyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6865722A028B06000916BE /* HourlyView.swift */; };
 		FF68F78729F6BBB400DDACA7 /* CollectionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF68F78629F6BBB300DDACA7 /* CollectionTableViewCell.swift */; };
 		FF68F78929F6BC2600DDACA7 /* WeatherCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF68F78829F6BC2600DDACA7 /* WeatherCollectionViewCell.swift */; };
 		FF68F78D29F7EE5200DDACA7 /* TextPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF68F78C29F7EE5200DDACA7 /* TextPicker.swift */; };
@@ -23,7 +28,7 @@
 		FFFF235229E531090036F8EC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FFFF235029E531090036F8EC /* LaunchScreen.storyboard */; };
 		FFFF235A29E531500036F8EC /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFFF235929E531500036F8EC /* CoreDataManager.swift */; };
 		FFFF236129E5427B0036F8EC /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFFF236029E5427B0036F8EC /* MainViewController.swift */; };
-		FFFF236329E542F60036F8EC /* DetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFFF236229E542F60036F8EC /* DetailsViewController.swift */; };
+		FFFF236329E542F60036F8EC /* HourlyDataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFFF236229E542F60036F8EC /* HourlyDataViewController.swift */; };
 		FFFF236629E543360036F8EC /* DownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFFF236529E543360036F8EC /* DownloadManager.swift */; };
 		FFFF236829E5436B0036F8EC /* DailyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFFF236729E5436B0036F8EC /* DailyViewController.swift */; };
 		FFFF236A29E5453F0036F8EC /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFFF236929E5453F0036F8EC /* SettingsViewController.swift */; };
@@ -34,8 +39,13 @@
 
 /* Begin PBXFileReference section */
 		FF07E9B929ED5AA700872D26 /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
-		FF07E9BB29EE699400872D26 /* Codable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Codable.swift; sourceTree = "<group>"; };
 		FF07E9BD29EE9BA000872D26 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		FF50ACF529F936260049382A /* SettingsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewCell.swift; sourceTree = "<group>"; };
+		FF6865672A011B5B000916BE /* HourlyDataCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HourlyDataCell.swift; sourceTree = "<group>"; };
+		FF6865692A01408F000916BE /* DailyTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyTableViewCell.swift; sourceTree = "<group>"; };
+		FF68656B2A025104000916BE /* SunAndMoonTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SunAndMoonTableViewCell.swift; sourceTree = "<group>"; };
+		FF68656D2A0283FF000916BE /* DailyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyView.swift; sourceTree = "<group>"; };
+		FF6865722A028B06000916BE /* HourlyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HourlyView.swift; sourceTree = "<group>"; };
 		FF68F78629F6BBB300DDACA7 /* CollectionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionTableViewCell.swift; sourceTree = "<group>"; };
 		FF68F78829F6BC2600DDACA7 /* WeatherCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherCollectionViewCell.swift; sourceTree = "<group>"; };
 		FF68F78C29F7EE5200DDACA7 /* TextPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextPicker.swift; sourceTree = "<group>"; };
@@ -51,7 +61,7 @@
 		FFFF235329E531090036F8EC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FFFF235929E531500036F8EC /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		FFFF236029E5427B0036F8EC /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
-		FFFF236229E542F60036F8EC /* DetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsViewController.swift; sourceTree = "<group>"; };
+		FFFF236229E542F60036F8EC /* HourlyDataViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HourlyDataViewController.swift; sourceTree = "<group>"; };
 		FFFF236529E543360036F8EC /* DownloadManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadManager.swift; sourceTree = "<group>"; };
 		FFFF236729E5436B0036F8EC /* DailyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyViewController.swift; sourceTree = "<group>"; };
 		FFFF236929E5453F0036F8EC /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
@@ -77,6 +87,36 @@
 				FF07E9B929ED5AA700872D26 /* Errors.swift */,
 			);
 			path = Errors;
+			sourceTree = "<group>";
+		};
+		FF50ACF429F935A80049382A /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				FFFF236929E5453F0036F8EC /* SettingsViewController.swift */,
+				FF50ACF529F936260049382A /* SettingsTableViewCell.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		FF6865652A011B26000916BE /* HourlyData */ = {
+			isa = PBXGroup;
+			children = (
+				FFFF236229E542F60036F8EC /* HourlyDataViewController.swift */,
+				FF6865672A011B5B000916BE /* HourlyDataCell.swift */,
+				FF6865722A028B06000916BE /* HourlyView.swift */,
+			);
+			path = HourlyData;
+			sourceTree = "<group>";
+		};
+		FF6865662A011B35000916BE /* DailyData */ = {
+			isa = PBXGroup;
+			children = (
+				FFFF236729E5436B0036F8EC /* DailyViewController.swift */,
+				FF6865692A01408F000916BE /* DailyTableViewCell.swift */,
+				FF68656B2A025104000916BE /* SunAndMoonTableViewCell.swift */,
+				FF68656D2A0283FF000916BE /* DailyView.swift */,
+			);
+			path = DailyData;
 			sourceTree = "<group>";
 		};
 		FF68F78A29F6BCC900DDACA7 /* Main */ = {
@@ -119,15 +159,15 @@
 		FFFF234129E531070036F8EC /* WeatherApp */ = {
 			isa = PBXGroup;
 			children = (
+				FF50ACF429F935A80049382A /* Settings */,
 				FF68F78B29F7EE4500DDACA7 /* Pickers */,
 				FF07E9B829ED5A9600872D26 /* Errors */,
 				FFFF236429E543220036F8EC /* Download Manager */,
 				FFFF235F29E5409F0036F8EC /* Core Data */,
 				FFFF235B29E53C1A0036F8EC /* App */,
 				FF68F78A29F6BCC900DDACA7 /* Main */,
-				FFFF236229E542F60036F8EC /* DetailsViewController.swift */,
-				FFFF236729E5436B0036F8EC /* DailyViewController.swift */,
-				FFFF236929E5453F0036F8EC /* SettingsViewController.swift */,
+				FF6865652A011B26000916BE /* HourlyData */,
+				FF6865662A011B35000916BE /* DailyData */,
 				FFFF237329E6D03F0036F8EC /* Custom.swift */,
 				FFFF235329E531090036F8EC /* Info.plist */,
 				FFFF235029E531090036F8EC /* LaunchScreen.storyboard */,
@@ -159,7 +199,6 @@
 			isa = PBXGroup;
 			children = (
 				FFFF236529E543360036F8EC /* DownloadManager.swift */,
-				FF07E9BB29EE699400872D26 /* Codable.swift */,
 				FF793CFB29F287890081E858 /* JSON.swift */,
 			);
 			path = "Download Manager";
@@ -241,17 +280,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FF68656E2A0283FF000916BE /* DailyView.swift in Sources */,
 				FFFF234D29E531070036F8EC /* WeatherApp.xcdatamodeld in Sources */,
+				FF6865682A011B5B000916BE /* HourlyDataCell.swift in Sources */,
 				FFFF234729E531070036F8EC /* AllowDeviceLocationViewController.swift in Sources */,
 				FFFF237429E6D03F0036F8EC /* Custom.swift in Sources */,
+				FF68656C2A025104000916BE /* SunAndMoonTableViewCell.swift in Sources */,
 				FFFF236829E5436B0036F8EC /* DailyViewController.swift in Sources */,
 				FF793CFA29EEBD9E0081E858 /* DaytimeWeatherTableViewCell.swift in Sources */,
 				FF68F78929F6BC2600DDACA7 /* WeatherCollectionViewCell.swift in Sources */,
+				FF68656A2A01408F000916BE /* DailyTableViewCell.swift in Sources */,
 				FF68F78D29F7EE5200DDACA7 /* TextPicker.swift in Sources */,
-				FF07E9BC29EE699400872D26 /* Codable.swift in Sources */,
 				FFFF234329E531070036F8EC /* AppDelegate.swift in Sources */,
 				FF68F78729F6BBB400DDACA7 /* CollectionTableViewCell.swift in Sources */,
 				FFFF236629E543360036F8EC /* DownloadManager.swift in Sources */,
+				FF50ACF629F936260049382A /* SettingsTableViewCell.swift in Sources */,
+				FF6865732A028B06000916BE /* HourlyView.swift in Sources */,
 				FFFF236A29E5453F0036F8EC /* SettingsViewController.swift in Sources */,
 				FF07E9BA29ED5AA700872D26 /* Errors.swift in Sources */,
 				FFFF236129E5427B0036F8EC /* MainViewController.swift in Sources */,
@@ -260,7 +304,7 @@
 				FFFF234529E531070036F8EC /* SceneDelegate.swift in Sources */,
 				FF793CFC29F287890081E858 /* JSON.swift in Sources */,
 				FF07E9BE29EE9BA100872D26 /* MainView.swift in Sources */,
-				FFFF236329E542F60036F8EC /* DetailsViewController.swift in Sources */,
+				FFFF236329E542F60036F8EC /* HourlyDataViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

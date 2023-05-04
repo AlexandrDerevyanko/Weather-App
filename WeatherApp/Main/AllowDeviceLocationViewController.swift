@@ -12,6 +12,8 @@ import SnapKit
 class AllowDeviceLocationViewController: UIViewController {
     
     var locationManager: CLLocationManager?
+    var data: Weather?
+    var location: CurrentLocation?
     
     private lazy var allowLocationButton = CustomButton(title: "ИСПОЛЬЗОВАТЬ МЕСТОПОЛОЖЕНИЕ УСТРОЙСТВА", titleColor: .white, bgColor: .orange, fontSize: 12, action: allowLocationButtonpressed)
     private lazy var dontAllowLocationButton = CustomButton(title: "НЕТ БУДУ ДОБАВЛЯТЬ ЛОКАЦИИ", titleColor: .white, bgColor: .systemBlue, fontSize: 12, alignment: .trailing, action: dontAllowLocationButtonpressed)
@@ -82,22 +84,28 @@ class AllowDeviceLocationViewController: UIViewController {
 }
 
 extension AllowDeviceLocationViewController: CLLocationManagerDelegate {
-
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    
+    func download() {
         let myLatitude: String = String(format: "%f", (self.locationManager?.location!.coordinate.latitude)!)
         let myLongitude: String = String(format:"%f", (self.locationManager?.location!.coordinate.longitude)!)
-
-        DownloadManager.defaultManager.downloadWeatherDataFromCoordinates(lat: myLatitude, lon: myLongitude) { weatherData, error in
+        DownloadManager.defaultManager.downloadWeatherDataFromCoordinates(lat: myLatitude, lon: myLongitude) { [self] weatherData, error in
             guard let weatherData else { return }
-            CoreDataManager.defaultManager.dataUpload(data: weatherData as! Weather) { success in
-                if success {
-                    DispatchQueue.main.async {
-                        self.checkLocation()
+            data = weatherData as? Weather
+            if let data {
+                CoreDataManager.defaultManager.addData(data: data) { success in
+                    if success {
+                        DispatchQueue.main.async {
+                            self.checkLocation()
+                        }
                     }
-
                 }
             }
         }
+    }
+
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        download()
+//        checkLocation()
     }
     
 }

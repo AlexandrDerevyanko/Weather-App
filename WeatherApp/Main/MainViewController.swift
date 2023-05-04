@@ -14,15 +14,25 @@ class MainViewController: UIViewController, NSFetchedResultsControllerDelegate {
     var currentData: CurrentData? {
         CoreDataManager.defaultManager.currentData[0] 
     }
+    var location: CurrentLocation?
     
     var dataByDayFetchResultsController: NSFetchedResultsController<DataByDay>?
+    var dataByHourFetchResultsController: NSFetchedResultsController<DataByHour>?
 
     func initFetchResultsController() {
         let firstFetchRequest = DataByDay.fetchRequest()
+        let secondFetchRequest = DataByHour.fetchRequest()
         firstFetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
+        secondFetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
+        if let location {
+            firstFetchRequest.predicate = NSPredicate(format: "location == %@", location)
+        }
         dataByDayFetchResultsController = NSFetchedResultsController(fetchRequest: firstFetchRequest, managedObjectContext: CoreDataManager.defaultManager.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
         dataByDayFetchResultsController?.delegate = self
         try? dataByDayFetchResultsController?.performFetch()
+        dataByHourFetchResultsController = NSFetchedResultsController(fetchRequest: secondFetchRequest, managedObjectContext: CoreDataManager.defaultManager.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+        dataByHourFetchResultsController?.delegate = self
+        try? dataByHourFetchResultsController?.performFetch()
     }
     
     private lazy var tableView: UITableView = {
@@ -47,10 +57,7 @@ class MainViewController: UIViewController, NSFetchedResultsControllerDelegate {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         initFetchResultsController()
-        if currentData?.location != nil {
-            self.title = "\(currentData?.location ?? "")"
-        }
-        initFetchResultsController()
+        self.title = dataByDayFetchResultsController?.fetchedObjects?[0].location?.name
         tableView.reloadData()
     }
     
@@ -89,7 +96,7 @@ class MainViewController: UIViewController, NSFetchedResultsControllerDelegate {
     static func push(in viewController: UIViewController, with location: String) {
         DownloadManager.defaultManager.downloadWeatherDataFromString(location: location) { weatherData, error in
             guard let weatherData else { return }
-            CoreDataManager.defaultManager.dataUpload(data: weatherData as! Weather) { success in
+            CoreDataManager.defaultManager.addData(data: weatherData as! Weather) { success in
                 if success {
                     DispatchQueue.main.async {
                         let vc = MainViewController()
@@ -98,12 +105,12 @@ class MainViewController: UIViewController, NSFetchedResultsControllerDelegate {
                 }
             }
         }
-        
     }
     
     @objc
     private func leftButtonPressed() {
-        print(123)
+        let settingsVC = SettingsViewController()
+        navigationController?.pushViewController(settingsVC, animated: true)
     }
     
     @objc
@@ -155,9 +162,12 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "CollectionCell", for: indexPath) as? CollectionTableViewCell else {
                 preconditionFailure("Error")
             }
+            cell.dataByHour = dataByHourFetchResultsController?.fetchedObjects
+            cell.dataByDay = dataByDayFetchResultsController?.fetchedObjects?[0]
+            cell.viewController = self
             return cell
         }
-        
+
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "DaytimeWeatherCell", for: indexPath) as? DaytimeWeatherTableViewCell else {
             preconditionFailure("Error")
         }
@@ -165,5 +175,13 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
         cell.data = dataByDayFetchResultsController?.fetchedObjects?[indexPath.row]
         cell.setup()
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.section == 1 {
+            let dailyVC = DailyViewController()
+            dailyVC.data = dataByDayFetchResultsController?.fetchedObjects?[indexPath.row]
+            navigationController?.pushViewController(dailyVC, animated: true)
+        }
     }
 }

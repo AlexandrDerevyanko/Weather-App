@@ -126,6 +126,22 @@ class MainView: UIView {
         return label
     }()
     
+    private let sunriseLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 16)
+        label.textColor = .white
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private let sunsetLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 16)
+        label.textColor = .white
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
@@ -155,6 +171,8 @@ class MainView: UIView {
         stackView.addArrangedSubview(secondStackView)
         stackView.addArrangedSubview(thirdStackView)
         addSubview(dateLabel)
+        addSubview(sunriseLabel)
+        addSubview(sunsetLabel)
         setupConstraints()
     }
     
@@ -198,6 +216,14 @@ class MainView: UIView {
             make.centerX.equalTo(snp.centerX)
             make.bottom.equalTo(-20)
         }
+        sunriseLabel.snp.makeConstraints { make in
+            make.left.equalTo(16)
+            make.bottom.equalTo(-20)
+        }
+        sunsetLabel.snp.makeConstraints { make in
+            make.right.equalTo(-16)
+            make.bottom.equalTo(-20)
+        }
     }
     
     func setup() {
@@ -209,8 +235,15 @@ class MainView: UIView {
                 formatter.timeStyle = .short
                 return formatter
             }()
+//            let timeDateFormatter: DateFormatter = {
+//                let formatter = DateFormatter()
+//                formatter.locale = .init(identifier: "ru_RU")
+//                formatter.dateStyle = .none
+//                formatter.timeStyle = .short
+//                return formatter
+//            }()
             minMaxAirTemperatureLabel.text = "\(data.minTempC) / \(data.maxTempC)"
-            airTemperatureLabel.text = "\(data.tempC)"
+            airTemperatureLabel.text = "\(data.tempC)°"
             textLabel.text = "\(String(describing: data.text ?? ""))"
             DownloadManager.defaultManager.downloadImageData(urlString: data.imageURL) { data in
                 guard let data else { return }
@@ -224,6 +257,9 @@ class MainView: UIView {
             windSpeedLabel.text = "\(data.windKph)"
             dailyChanceOfRainLabel.text = "\(data.dailyChanceOfRain)%"
             dateLabel.text = "\(dateFormatter.string(from: data.date ?? Date()))"
+            dateFormatter.dateStyle = .none
+            sunriseLabel.text = "\(dateFormatter.string(from: data.sunrise ?? Date()))"
+            sunsetLabel.text = "\(dateFormatter.string(from: data.sunset ?? Date()))"
         }
     }
     
