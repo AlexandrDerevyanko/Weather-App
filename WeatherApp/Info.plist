@@ -6,6 +6,8 @@
 	<string>123</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>456</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>789</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
