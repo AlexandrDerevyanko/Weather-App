@@ -10,7 +10,7 @@ import CoreData
 
 class CollectionTableViewCell: UITableViewCell, NSFetchedResultsControllerDelegate {
     
-    var location: CurrentLocation?
+//    var location: CurrentLocation?
     var dataByHour: [DataByHour]?
     var dataByDay: DataByDay?
     var viewController: UIViewController?
@@ -18,7 +18,6 @@ class CollectionTableViewCell: UITableViewCell, NSFetchedResultsControllerDelega
     private lazy var layout: UICollectionViewFlowLayout = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-//        layout.estimatedItemSize = CGSize(width: UIScreen.main.bounds.width - 32, height: 120)
         return layout
     }()
     
@@ -35,23 +34,9 @@ class CollectionTableViewCell: UITableViewCell, NSFetchedResultsControllerDelega
         return collectionView
     }()
     
-//    var dataByHourFetchResultsController: NSFetchedResultsController<DataByHour>?
-    
-//    func initFetchResultsController() {
-//        let secondFetchRequest = DataByHour.fetchRequest()
-//        secondFetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
-//        if location != nil {
-//            secondFetchRequest.predicate = NSPredicate(format: "location == %@", location!)
-//        }
-//        dataByHourFetchResultsController = NSFetchedResultsController(fetchRequest: secondFetchRequest, managedObjectContext: CoreDataManager.defaultManager.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
-//        dataByHourFetchResultsController?.delegate = self
-//        try? dataByHourFetchResultsController?.performFetch()
-//    }
-    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
-//        initFetchResultsController()
     }
     
     required init?(coder: NSCoder) {
@@ -85,10 +70,10 @@ extension CollectionTableViewCell: UICollectionViewDelegateFlowLayout, UICollect
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "DefaultCell", for: indexPath)
             return cell
         }
-//        initFetchResultsController()
-//        cell.data = dataByHourFetchResultsController?.fetchedObjects?[indexPath.row]
+
         cell.data = dataByHour?[indexPath.row]
         cell.setup()
+//        print(dataByHour?[indexPath.row].date)
         cell.layer.cornerRadius = 28
         return cell
     }
@@ -109,12 +94,6 @@ extension CollectionTableViewCell: UICollectionViewDelegateFlowLayout, UICollect
         
     }
     
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-//
-//        return 8
-//
-//    }
-//
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let hourlyDataVC = HourlyDataViewController()
         hourlyDataVC.data = dataByDay

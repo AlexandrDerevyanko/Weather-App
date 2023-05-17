@@ -29,25 +29,25 @@ class CoreDataManager {
         return container
     }()
     
-    // Получение массива данных о погоде
-    var currentData: [CurrentData] {
-        let fetchRequest = CurrentData.fetchRequest()
-        return (try? persistentContainer.viewContext.fetch(fetchRequest)) ?? []
-    }
-    
-    // Добавление локации
-    func addLocation(data: Weather) {
-        persistentContainer.performBackgroundTask { contextBackground in
-            let location = CurrentLocation(context: contextBackground)
-            location.name = data.location?.name ?? ""
-            
-            do {
-                try contextBackground.save()
-            } catch {
-                print(error)
-            }
-        }
-    }
+//    // Получение массива данных о погоде
+//    var currentData: [CurrentData] {
+//        let fetchRequest = CurrentData.fetchRequest()
+//        return (try? persistentContainer.viewContext.fetch(fetchRequest)) ?? []
+//    }
+//
+//    // Добавление локации
+//    func addLocation(data: Weather) {
+//        persistentContainer.performBackgroundTask { contextBackground in
+//            let location = CurrentLocation(context: contextBackground)
+//            location.name = data.location?.name ?? ""
+//
+//            do {
+//                try contextBackground.save()
+//            } catch {
+//                print(error)
+//            }
+//        }
+//    }
     
     // Получение массива локаций
     var locationArray: [CurrentLocation] {
@@ -68,10 +68,9 @@ class CoreDataManager {
         fetchRequest.predicate = NSPredicate(format: "dateString == %@", dateString)
         return (try? context.fetch(fetchRequest))?.first
     }
-    
+
     func addData(data:Weather, completion: ((_ success: Bool) -> ())) {
         
-//        deleteData()
         if locationArray.count != 0 {
             completion(true)
             return
@@ -82,103 +81,7 @@ class CoreDataManager {
                 completion(true)
             }
         }
-//        persistentContainer.performBackgroundTask { contextBackground in
-//            let location = CurrentLocation(context: contextBackground)
-//            location.name = data.location?.name ?? ""
-//
-//            do {
-//                try contextBackground.save()
-//            } catch {
-//                print(error)
-//            }
-//        }
-//        persistentContainer.performBackgroundTask { contextBackground in
-//            let currentData = CurrentData(context: contextBackground)
-//            let dayData = data.forecast?.forecastday?[0].day
-//            let dataCurrent = data.current
-//            let lastUpdatedDate = dataCurrent?.lastUpdated ?? ""
-//            let sunriseTime = data.forecast?.forecastday?[0].astro?.sunrise ?? ""
-//            print(sunriseTime)
-//            let sunsetTime = data.forecast?.forecastday?[0].astro?.sunset ?? ""
-//            print(sunsetTime)
-//            let dateFormatter = DateFormatter()
-//            let timeDateFormatter = DateFormatter()
-//            timeDateFormatter.dateFormat = "HH:mm a"
-//            timeDateFormatter.timeZone = TimeZone(abbreviation: "GMT+00:00")
-//            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
-//            currentData.tempC = dataCurrent?.tempC ?? 0
-//            currentData.minTempC = dayData?.mintempC ?? 0
-//            currentData.maxTempC = dayData?.maxtempC ?? 0
-//            currentData.date = dateFormatter.date(from:lastUpdatedDate)
-//            currentData.sunset = timeDateFormatter.date(from: sunsetTime)
-//            currentData.sunrise = timeDateFormatter.date(from: sunriseTime)
-//            currentData.text = dataCurrent?.condition?.text
-//            currentData.dailyChanceOfRain = dayData?.dailyChanceOfRain ?? 0
-//            currentData.uv = dayData?.uv ?? 0
-//            currentData.windKph = dataCurrent?.windKph ?? 0
-//            currentData.imageURL = dataCurrent?.condition?.icon
-//            currentData.location = self.getLocation(name: data.location?.name ?? "", context: contextBackground)
-//            let dataArray = data.forecast?.forecastday
-//            if let dataArray {
-//                for index in dataArray {
-//
-//                    let dataByDay = DataByDay(context: contextBackground)
-//                    let dayData = index.day
-//                    let isoDate = index.date ?? ""
-//                    let dateFormatter = DateFormatter()
-//                    dateFormatter.dateFormat = "yyyy-MM-dd"
-//                    let timeDateFormatter = DateFormatter()
-//                    timeDateFormatter.dateFormat = "HH:mm a"
-//                    timeDateFormatter.timeZone = TimeZone(abbreviation: "GMT+00:00")
-//                    dataByDay.maxTempC = dayData?.maxtempC ?? 0
-//                    dataByDay.minTempC = dayData?.mintempC ?? 0
-//                    dataByDay.date = dateFormatter.date(from:isoDate)
-//                    dataByDay.dateString = isoDate
-//                    dataByDay.dailyChanceOfRain = dayData?.dailyChanceOfRain ?? 0
-//                    dataByDay.text = dayData?.condition?.text
-//                    dataByDay.imageURL = dayData?.condition?.icon
-//                    dataByDay.location = self.getLocation(name: data.location?.name ?? "", context: contextBackground)
-//                    dataByDay.sunrise = timeDateFormatter.date(from: index.astro?.sunrise ?? "")
-//                    dataByDay.sunset = timeDateFormatter.date(from: index.astro?.sunset ?? "")
-//                    dataByDay.moonrise = timeDateFormatter.date(from: index.astro?.moonrise ?? "")
-//                    dataByDay.moonset = timeDateFormatter.date(from: index.astro?.moonset ?? "")
-//                    dataByDay.moonPhase = index.astro?.moonPhase
-//                }
-//            }
-//
-//            let hourlyDataArray = data.forecast?.forecastday
-//            if let hourlyDataArray {
-//                for i in hourlyDataArray {
-//                    let date = i.date ?? ""
-//                    let hourlyData = i.hour
-//                    if let hourlyData {
-//                        for index in hourlyData {
-//                            let dataByHour = DataByHour(context: contextBackground)
-//                            dataByHour.dataByDay = self.getDataByDay(dateString: date, context: contextBackground)
-//                            let isoDate = index.time ?? ""
-//                            let dateFormatter = DateFormatter()
-//                            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
-//                            let date = dateFormatter.date(from:isoDate)
-//                            dataByHour.date = date
-//                            dataByHour.tempC = index.tempC ?? 0
-//                            dataByHour.imageURL = index.condition?.icon
-//                            dataByHour.chanceOfRain = index.chanceOfRain ?? 0
-//                            dataByHour.text = index.condition?.text
-//                            dataByHour.windMph = index.windMph ?? 0
-//                            dataByHour.windKph = index.windKph ?? 0
-//                            dataByHour.uv = index.uv ?? 0
-//                            dataByHour.location = self.getLocation(name: data.location?.name ?? "", context: contextBackground)
-//                        }
-//                    }
-//                }
-//            }
-//            do {
-//                try contextBackground.save()
-//            } catch {
-//                print(error)
-//            }
-//        }
-//        completion(true)
+        
     }
     
     func addData2(data:Weather, completion: ((_ success: Bool) -> ())) {
@@ -259,14 +162,12 @@ class CoreDataManager {
                             let dataByHour = DataByHour(context: contextBackground)
                             dataByHour.dataByDay = self.getDataByDay(dateString: date, context: contextBackground)
                             let isoDate = index.time ?? ""
-//                            print(isoDate)
                             let dateFormatter = DateFormatter()
                             dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
                             dateFormatter.calendar = Calendar(identifier: .gregorian)
                             dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
                             dateFormatter.locale = Locale(identifier: "en_US_POSIX")
                             let date = dateFormatter.date(from:isoDate)
-                            print(date)
                             dataByHour.date = date
                             dataByHour.tempC = index.tempC ?? 0
                             dataByHour.imageURL = index.condition?.icon

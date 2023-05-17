@@ -80,6 +80,7 @@ class WeatherCollectionViewCell: UICollectionViewCell {
                 return formatter
             }()
             dateLabel.text = "\(dateFormatter.string(from: data.date ?? Date()))"
+            print(dateLabel.text)
             DownloadManager.defaultManager.downloadImageData(urlString: data.imageURL) { data in
                 guard let data else { return }
                 DispatchQueue.main.async {
