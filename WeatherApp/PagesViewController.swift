@@ -2,7 +2,7 @@
 import UIKit
 import CoreData
 
-class TestViewController: UIViewController, NSFetchedResultsControllerDelegate {
+class PagesViewController: UIViewController, NSFetchedResultsControllerDelegate {
     
     private var pageController: UIPageViewController?
     var currentIndex: Int = 0
@@ -63,7 +63,7 @@ class TestViewController: UIViewController, NSFetchedResultsControllerDelegate {
             CoreDataManager.defaultManager.addData2(data: weatherData as! Weather) { success in
                 if success {
                     DispatchQueue.main.async {
-                        let vc = TestViewController()
+                        let vc = PagesViewController()
 //                        vc.initFetchResultsControllers()
                         viewController.navigationController?.pushViewController(vc, animated: true)
                     }
@@ -81,13 +81,13 @@ class TestViewController: UIViewController, NSFetchedResultsControllerDelegate {
     @objc
     private func rightButtonPressed() {
         TextPicker.defaultPicker.getText(showPickerIn: self, title: "Adding a new location", message: "Please enter city name") { text in
-            TestViewController.push(in: self, with: text)
+            PagesViewController.push(in: self, with: text)
         }
     }
     
 }
 
-extension TestViewController: UIPageViewControllerDataSource, UIPageViewControllerDelegate {
+extension PagesViewController: UIPageViewControllerDataSource, UIPageViewControllerDelegate {
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
         

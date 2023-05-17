@@ -31,7 +31,7 @@ class EmptyLocationViewController: UIViewController {
     @objc
     private func buttonPressed() {
         TextPicker.defaultPicker.getText(showPickerIn: self, title: "Adding a new location", message: "Please enter city name") { text in
-            TestViewController.push(in: self, with: text)
+            PagesViewController.push(in: self, with: text)
         }
     }
     

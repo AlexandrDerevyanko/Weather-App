@@ -73,7 +73,7 @@ extension CollectionTableViewCell: UICollectionViewDelegateFlowLayout, UICollect
 
         cell.data = dataByHour?[indexPath.row]
         cell.setup()
-//        print(dataByHour?[indexPath.row].date)
+        print(dataByHour?[indexPath.row].date)
         cell.layer.cornerRadius = 28
         return cell
     }

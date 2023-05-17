@@ -75,7 +75,7 @@ class AllowDeviceLocationViewController: UIViewController, NSFetchedResultsContr
     }
     
     private func checkLocation() {
-        let mainVC = TestViewController()
+        let mainVC = PagesViewController()
         navigationController?.pushViewController(mainVC, animated: true)
     }
 
