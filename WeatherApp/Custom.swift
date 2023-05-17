@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import CoreData
 
 final class CustomButton: UIButton {
     typealias Action = () -> Void
@@ -61,3 +62,37 @@ final class CustomButton: UIButton {
         buttonAction()
     }
 }
+
+//var dataByDayFetchResultsController: NSFetchedResultsController<DataByDay>?
+//var dataByHourFetchResultsController: NSFetchedResultsController<DataByHour>?
+//var currentDataFetchResultsController: NSFetchedResultsController<CurrentData>?
+//var locationFetchResultsController: NSFetchedResultsController<CurrentLocation>?
+//
+//func initFetchResultsController() {
+//    let firstFetchRequest = DataByDay.fetchRequest()
+//    let secondFetchRequest = DataByHour.fetchRequest()
+//    let thirdFetchRequest = CurrentData.fetchRequest()
+//
+//    firstFetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
+//    secondFetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
+//    thirdFetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
+//
+////    if location != nil {
+////        print(12345)
+////        firstFetchRequest.predicate = NSPredicate(format: "location == %@", location!)
+////        secondFetchRequest.predicate = NSPredicate(format: "location == %@", location!)
+////        thirdFetchRequest.predicate = NSPredicate(format: "location == %@", location!)
+////    }
+//
+//    dataByDayFetchResultsController = NSFetchedResultsController(fetchRequest: firstFetchRequest, managedObjectContext: CoreDataManager.defaultManager.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+////    dataByDayFetchResultsController?.delegate = self
+//    try? dataByDayFetchResultsController?.performFetch()
+//
+//    dataByHourFetchResultsController = NSFetchedResultsController(fetchRequest: secondFetchRequest, managedObjectContext: CoreDataManager.defaultManager.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+////    dataByHourFetchResultsController?.delegate = self
+//    try? dataByHourFetchResultsController?.performFetch()
+//
+//    currentDataFetchResultsController = NSFetchedResultsController(fetchRequest: thirdFetchRequest, managedObjectContext: CoreDataManager.defaultManager.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+////    currentDataFetchResultsController?.delegate = self
+//    try? currentDataFetchResultsController?.performFetch()
+//}

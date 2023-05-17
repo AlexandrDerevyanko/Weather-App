@@ -10,6 +10,7 @@ import CoreData
 
 class CollectionTableViewCell: UITableViewCell, NSFetchedResultsControllerDelegate {
     
+    var location: CurrentLocation?
     var dataByHour: [DataByHour]?
     var dataByDay: DataByDay?
     var viewController: UIViewController?
@@ -34,20 +35,23 @@ class CollectionTableViewCell: UITableViewCell, NSFetchedResultsControllerDelega
         return collectionView
     }()
     
-    var dataByHourFetchResultsController: NSFetchedResultsController<DataByHour>?
+//    var dataByHourFetchResultsController: NSFetchedResultsController<DataByHour>?
     
-    func initFetchResultsController() {
-        let secondFetchRequest = DataByHour.fetchRequest()
-        secondFetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
-        dataByHourFetchResultsController = NSFetchedResultsController(fetchRequest: secondFetchRequest, managedObjectContext: CoreDataManager.defaultManager.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
-        dataByHourFetchResultsController?.delegate = self
-        try? dataByHourFetchResultsController?.performFetch()
-    }
+//    func initFetchResultsController() {
+//        let secondFetchRequest = DataByHour.fetchRequest()
+//        secondFetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
+//        if location != nil {
+//            secondFetchRequest.predicate = NSPredicate(format: "location == %@", location!)
+//        }
+//        dataByHourFetchResultsController = NSFetchedResultsController(fetchRequest: secondFetchRequest, managedObjectContext: CoreDataManager.defaultManager.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+//        dataByHourFetchResultsController?.delegate = self
+//        try? dataByHourFetchResultsController?.performFetch()
+//    }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
-        initFetchResultsController()
+//        initFetchResultsController()
     }
     
     required init?(coder: NSCoder) {
@@ -81,8 +85,9 @@ extension CollectionTableViewCell: UICollectionViewDelegateFlowLayout, UICollect
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "DefaultCell", for: indexPath)
             return cell
         }
-        initFetchResultsController()
-        cell.data = dataByHourFetchResultsController?.fetchedObjects?[indexPath.row]
+//        initFetchResultsController()
+//        cell.data = dataByHourFetchResultsController?.fetchedObjects?[indexPath.row]
+        cell.data = dataByHour?[indexPath.row]
         cell.setup()
         cell.layer.cornerRadius = 28
         return cell

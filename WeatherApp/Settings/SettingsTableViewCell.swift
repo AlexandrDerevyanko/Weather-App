@@ -9,8 +9,8 @@ import UIKit
 
 class SettingsTableViewCell: UITableViewCell {
     
-    var value: String?
-    var data: Settings?
+    var title: String?
+    var value: [String]?
     
     private let stackView: UIStackView = {
         let stackView = UIStackView()
@@ -28,14 +28,14 @@ class SettingsTableViewCell: UITableViewCell {
         return label
     }()
     
-    private let trueButton: UIButton = {
+    private let falseButton: UIButton = {
         let button = UIButton()
         button.titleLabel?.font = .systemFont(ofSize: 12)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
-    private let falseButton: UIButton = {
+    private let trueButton: UIButton = {
         let button = UIButton()
         button.titleLabel?.font = .systemFont(ofSize: 12)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -55,8 +55,8 @@ class SettingsTableViewCell: UITableViewCell {
     private func setupUI() {
         contentView.addSubview(descriptionLabel)
         contentView.addSubview(stackView)
-        stackView.addArrangedSubview(trueButton)
         stackView.addArrangedSubview(falseButton)
+        stackView.addArrangedSubview(trueButton)
         setupConstraints()
     }
     
@@ -69,10 +69,6 @@ class SettingsTableViewCell: UITableViewCell {
             make.right.equalTo(-16)
             make.centerY.equalTo(snp.centerY)
         }
-//        trueButton.snp.makeConstraints { make in
-//            make.right.equalTo(falseButton.snp.left)
-//            make.centerY.equalTo(snp.centerY)
-//        }
     }
     
     private func addtargets() {
@@ -82,8 +78,8 @@ class SettingsTableViewCell: UITableViewCell {
     
     func setup (text: String, value: [String], boolean: Bool) {
         descriptionLabel.text = text
-        trueButton.setTitle(value[0], for: .normal)
-        falseButton.setTitle(value[1], for: .normal)
+        falseButton.setTitle(value[0], for: .normal)
+        trueButton.setTitle(value[1], for: .normal)
         if boolean {
             trueButton.backgroundColor = .systemBlue
             falseButton.backgroundColor = .systemGray2
@@ -94,36 +90,32 @@ class SettingsTableViewCell: UITableViewCell {
     }
     
     @objc
-    private func trueButtonPressed() {
-        if value == data?.temperatureFormatDescription {
-            CoreDataManager.defaultManager.setSettings(speedFormat: nil, temperatureFormat: true, timeFormat: nil)
-            trueButton.backgroundColor = .systemOrange
-            falseButton.backgroundColor = .gray
-        } else if value == data?.speedFormatDescription {
-            CoreDataManager.defaultManager.setSettings(speedFormat: true, temperatureFormat: nil, timeFormat: nil)
-            trueButton.backgroundColor = .systemOrange
-            falseButton.backgroundColor = .gray
-        } else if value == data?.timeFormatDescription {
-            CoreDataManager.defaultManager.setSettings(speedFormat: nil, temperatureFormat: nil, timeFormat: true)
-            trueButton.backgroundColor = .systemOrange
-            falseButton.backgroundColor = .gray
+    private func falseButtonPressed() {
+        if let title {
+            if title == "Temperature" {
+                UserDefaults.standard.set(false, forKey: title)
+                trueButton.backgroundColor = .systemGray2
+                falseButton.backgroundColor = .systemBlue
+            } else if title == "Time format" {
+                UserDefaults.standard.set(false, forKey: title)
+                trueButton.backgroundColor = .systemGray2
+                falseButton.backgroundColor = .systemBlue
+            }
         }
     }
     
     @objc
-    private func falseButtonPressed() {
-        if value == data?.temperatureFormatDescription {
-            CoreDataManager.defaultManager.setSettings(speedFormat: nil, temperatureFormat: false, timeFormat: nil)
-            falseButton.backgroundColor = .systemOrange
-            trueButton.backgroundColor = .gray
-        } else if value == data?.speedFormatDescription {
-            CoreDataManager.defaultManager.setSettings(speedFormat: false, temperatureFormat: nil, timeFormat: nil)
-            falseButton.backgroundColor = .systemOrange
-            trueButton.backgroundColor = .gray
-        } else if value == data?.timeFormatDescription {
-            CoreDataManager.defaultManager.setSettings(speedFormat: nil, temperatureFormat: nil, timeFormat: false)
-            falseButton.backgroundColor = .systemOrange
-            trueButton.backgroundColor = .gray
+    private func trueButtonPressed() {
+        if let title {
+            if title == "Temperature" {
+                UserDefaults.standard.set(true, forKey: title)
+                trueButton.backgroundColor = .systemBlue
+                falseButton.backgroundColor = .systemGray2
+            } else if title == "Time format" {
+                UserDefaults.standard.set(true, forKey: title)
+                trueButton.backgroundColor = .systemBlue
+                falseButton.backgroundColor = .systemGray2
+            }
         }
     }
     

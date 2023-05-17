@@ -61,16 +61,14 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
             preconditionFailure("Error")
         }
         if indexPath.row == 0 {
-            cell.value = settings?.temperatureFormatDescription ?? ""
-            cell.setup(text: settings?.temperatureFormatDescription ?? "", value: ["C", "F"], boolean: settings?.temperatureFormat ?? true)
+            cell.title = settingsArray[indexPath.row].title ?? ""
+            cell.value = settingsArray[indexPath.row].value ?? []
+            cell.setup(text: settingsArray[indexPath.row].title ?? "", value: settingsArray[indexPath.row].value ?? [], boolean: UserDefaults.standard.bool(forKey: settingsArray[indexPath.row].title ?? ""))
         } else if indexPath.row == 1 {
-            cell.value = settings?.speedFormatDescription ?? ""
-            cell.setup(text: settings?.speedFormatDescription ?? "", value: ["MPH", "KmPH"], boolean: settings?.speedFormat ?? true)
-        } else if indexPath.row == 2 {
-            cell.value = settings?.timeFormatDescription ?? ""
-            cell.setup(text: settings?.timeFormatDescription ?? "", value: ["12", "24"], boolean: settings?.timeFormat ?? true)
+            cell.title = settingsArray[indexPath.row].title ?? ""
+            cell.value = settingsArray[indexPath.row].value ?? []
+            cell.setup(text: settingsArray[indexPath.row].title ?? "", value: settingsArray[indexPath.row].value ?? [], boolean: UserDefaults.standard.bool(forKey: settingsArray[indexPath.row].title ?? ""))
         }
-        cell.data = settings
         return cell
     }
     

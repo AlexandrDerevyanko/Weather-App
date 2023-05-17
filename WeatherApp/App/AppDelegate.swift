@@ -14,7 +14,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+//        let vc = MainViewController(index: 1, locations: CoreDataManager.defaultManager.locationArray)
+//        vc.initFetchResultsControllers()
+//        let vc2 = DailyViewController()
+//        vc2.data = vc.dataByDayFetchResultsController?.fetchedObjects?[1]
+//        vc2.initFetchResultsController()
+//        print(vc2.dataByHourFetchResultsController?.fetchedObjects?.count)
         return true
     }
 

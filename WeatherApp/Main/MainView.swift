@@ -254,7 +254,7 @@ class MainView: UIView {
             
             
             uvIndexLabel.text = "\(data.uv)"
-            windSpeedLabel.text = "\(data.windKph)"
+            windSpeedLabel.text = "\(Int(data.windMps))"
             dailyChanceOfRainLabel.text = "\(data.dailyChanceOfRain)%"
             dateLabel.text = "\(dateFormatter.string(from: data.date ?? Date()))"
             dateFormatter.dateStyle = .none

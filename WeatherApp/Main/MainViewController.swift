@@ -11,29 +11,25 @@ import CoreData
 
 class MainViewController: UIViewController, NSFetchedResultsControllerDelegate {
     
-    var currentData: CurrentData? {
-        CoreDataManager.defaultManager.currentData[0] 
+    var index: Int
+    var locations: [CurrentLocation]
+    var location: CurrentLocation {
+        return locations[index]
     }
-    var location: CurrentLocation?
+    
+    init(index: Int, locations: [CurrentLocation]) {
+        self.index = index
+        self.locations = locations
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     var dataByDayFetchResultsController: NSFetchedResultsController<DataByDay>?
     var dataByHourFetchResultsController: NSFetchedResultsController<DataByHour>?
-
-    func initFetchResultsController() {
-        let firstFetchRequest = DataByDay.fetchRequest()
-        let secondFetchRequest = DataByHour.fetchRequest()
-        firstFetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
-        secondFetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
-        if let location {
-            firstFetchRequest.predicate = NSPredicate(format: "location == %@", location)
-        }
-        dataByDayFetchResultsController = NSFetchedResultsController(fetchRequest: firstFetchRequest, managedObjectContext: CoreDataManager.defaultManager.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
-        dataByDayFetchResultsController?.delegate = self
-        try? dataByDayFetchResultsController?.performFetch()
-        dataByHourFetchResultsController = NSFetchedResultsController(fetchRequest: secondFetchRequest, managedObjectContext: CoreDataManager.defaultManager.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
-        dataByHourFetchResultsController?.delegate = self
-        try? dataByHourFetchResultsController?.performFetch()
-    }
+    var currentDataFetchResultsController: NSFetchedResultsController<CurrentData>?
     
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
@@ -50,15 +46,14 @@ class MainViewController: UIViewController, NSFetchedResultsControllerDelegate {
         
     override func viewDidLoad() {
         super.viewDidLoad()
+        initFetchResultsControllers()
         setupUI()
         navigationItem.setHidesBackButton(true, animated: true)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        initFetchResultsController()
-        self.title = dataByDayFetchResultsController?.fetchedObjects?[0].location?.name
-        tableView.reloadData()
+        title = location.name
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -71,6 +66,32 @@ class MainViewController: UIViewController, NSFetchedResultsControllerDelegate {
         navigationController?.navigationBar.standardAppearance = appearance
         navigationController?.navigationBar.compactAppearance = appearance
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
+    }
+    
+    func initFetchResultsControllers() {
+        let firstFetchRequest = DataByDay.fetchRequest()
+        let secondFetchRequest = DataByHour.fetchRequest()
+        let thirdFetchRequest = CurrentData.fetchRequest()
+        
+        firstFetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
+        secondFetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
+        thirdFetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
+        
+        firstFetchRequest.predicate = NSPredicate(format: "location == %@", location)
+        secondFetchRequest.predicate = NSPredicate(format: "location == %@", location)
+        thirdFetchRequest.predicate = NSPredicate(format: "location == %@", location)
+
+        dataByDayFetchResultsController = NSFetchedResultsController(fetchRequest: firstFetchRequest, managedObjectContext: CoreDataManager.defaultManager.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+        dataByDayFetchResultsController?.delegate = self
+        try? dataByDayFetchResultsController?.performFetch()
+        
+        dataByHourFetchResultsController = NSFetchedResultsController(fetchRequest: secondFetchRequest, managedObjectContext: CoreDataManager.defaultManager.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+        dataByHourFetchResultsController?.delegate = self
+        try? dataByHourFetchResultsController?.performFetch()
+        
+        currentDataFetchResultsController = NSFetchedResultsController(fetchRequest: thirdFetchRequest, managedObjectContext: CoreDataManager.defaultManager.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+        currentDataFetchResultsController?.delegate = self
+        try? currentDataFetchResultsController?.performFetch()
     }
 
     private func setupUI() {
@@ -93,20 +114,6 @@ class MainViewController: UIViewController, NSFetchedResultsControllerDelegate {
         navigationItem.leftBarButtonItem = leftButton
     }
     
-    static func push(in viewController: UIViewController, with location: String) {
-        DownloadManager.defaultManager.downloadWeatherDataFromString(location: location) { weatherData, error in
-            guard let weatherData else { return }
-            CoreDataManager.defaultManager.addData(data: weatherData as! Weather) { success in
-                if success {
-                    DispatchQueue.main.async {
-                        let vc = MainViewController()
-                        viewController.navigationController?.pushViewController(vc, animated: true)
-                    }
-                }
-            }
-        }
-    }
-    
     @objc
     private func leftButtonPressed() {
         let settingsVC = SettingsViewController()
@@ -115,9 +122,7 @@ class MainViewController: UIViewController, NSFetchedResultsControllerDelegate {
     
     @objc
     private func rightButtonPressed() {
-        TextPicker.defaultPicker.getText(showPickerIn: self, title: "123", message: "123") { text in
-            MainViewController.push(in: self, with: text)
-        }
+        
     }
 
 }
@@ -127,7 +132,7 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if section == 0 {
             let cell = MainView()
-            let data = currentData ?? nil
+            let data = currentDataFetchResultsController?.fetchedObjects?[0] ?? nil
             cell.data = data
             cell.setup()
             return cell
@@ -163,7 +168,6 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
                 preconditionFailure("Error")
             }
             cell.dataByHour = dataByHourFetchResultsController?.fetchedObjects
-            cell.dataByDay = dataByDayFetchResultsController?.fetchedObjects?[0]
             cell.viewController = self
             return cell
         }
@@ -178,9 +182,12 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.section == 1 {
+            print(indexPath.row)
             let dailyVC = DailyViewController()
             dailyVC.data = dataByDayFetchResultsController?.fetchedObjects?[indexPath.row]
+//            print(dataByDayFetchResultsController?.fetchedObjects?[indexPath.row].date)
             navigationController?.pushViewController(dailyVC, animated: true)
         }
     }

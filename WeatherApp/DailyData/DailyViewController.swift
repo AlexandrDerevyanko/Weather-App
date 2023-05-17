@@ -40,7 +40,6 @@ class DailyViewController: UIViewController, NSFetchedResultsControllerDelegate 
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        initFetchResultsController()
         setupUI()
     }
     

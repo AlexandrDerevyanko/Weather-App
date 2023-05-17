@@ -14,13 +14,15 @@
         <attribute name="tempF" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="text" optional="YES" attributeType="String"/>
         <attribute name="uv" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <attribute name="windKph" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="windMph" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="windMps" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <relationship name="location" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CurrentLocation" inverseName="currentData" inverseEntity="CurrentLocation"/>
     </entity>
     <entity name="CurrentLocation" representedClassName="CurrentLocation" syncable="YES" codeGenerationType="class">
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <relationship name="currentData" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CurrentData" inverseName="location" inverseEntity="CurrentData"/>
+        <relationship name="dataBuHour" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="DataByHour" inverseName="location" inverseEntity="DataByHour"/>
         <relationship name="dataByDay" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="DataByDay" inverseName="location" inverseEntity="DataByDay"/>
     </entity>
     <entity name="DataByDay" representedClassName="DataByDay" syncable="YES" codeGenerationType="class">
@@ -52,6 +54,7 @@
         <attribute name="windKph" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="windMph" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <relationship name="dataByDay" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="DataByDay" inverseName="dataByHour" inverseEntity="DataByDay"/>
+        <relationship name="location" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CurrentLocation" inverseName="dataBuHour" inverseEntity="CurrentLocation"/>
     </entity>
     <entity name="Settings" representedClassName="Settings" syncable="YES" codeGenerationType="class">
         <attribute name="speedFormat" attributeType="Boolean" usesScalarValueType="YES"/>
