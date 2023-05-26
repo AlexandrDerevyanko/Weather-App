@@ -24,7 +24,7 @@ class DownloadManager {
                 
                 if let error {
                     print(error.localizedDescription)
-                    completion?(nil, error)
+                    completion?(nil, Errors.unexpected)
                     return
                 }
                 
@@ -39,7 +39,7 @@ class DownloadManager {
                     completion?(weatherData, nil)
                 } catch {
                     print(error)
-                    completion?(nil, error)
+                    completion?(nil, Errors.unexpected)
                 }
                 
             }.resume()
@@ -54,7 +54,7 @@ class DownloadManager {
                 
                 if let error {
                     print(error.localizedDescription)
-                    completion?(nil, error)
+                    completion?(nil, Errors.unexpected)
                     return
                 }
                 
@@ -63,13 +63,12 @@ class DownloadManager {
                     completion?(nil, Errors.unexpected)
                     return
                 }
-                
                 do {
                     let weatherData = try JSONDecoder().decode(Weather.self, from: data)
                     completion?(weatherData, nil)
                 } catch {
                     print(error)
-                    completion?(nil, error)
+                    completion?(nil, Errors.unexpected)
                 }
                 
             }.resume()
@@ -82,6 +81,10 @@ class DownloadManager {
         
         let session = URLSession(configuration: .default)
         session.dataTask(with: url) { data, response, error in
+            if let error {
+                print(error)
+                return
+            }
             complition(data)
         }.resume()
     }

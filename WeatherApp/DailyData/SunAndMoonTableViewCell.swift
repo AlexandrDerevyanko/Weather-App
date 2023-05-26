@@ -9,7 +9,7 @@ import UIKit
 
 class SunAndMoonTableViewCell: UITableViewCell {
     
-    var data: DataByDay?
+    var data: DailyWeather?
     
     private let pointView: UIView = {
         let point = UIView()
@@ -30,7 +30,7 @@ class SunAndMoonTableViewCell: UITableViewCell {
     private let moonPhaseLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .black
+        label.textColor = .black.withAlphaComponent(0.8)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -45,7 +45,7 @@ class SunAndMoonTableViewCell: UITableViewCell {
     private let sunriseTextLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .black
+        label.textColor = .black.withAlphaComponent(0.8)
         label.text = "Sunrise"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -54,7 +54,7 @@ class SunAndMoonTableViewCell: UITableViewCell {
     private let sunriseValueLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .black
+        label.textColor = .black.withAlphaComponent(0.8)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -62,7 +62,7 @@ class SunAndMoonTableViewCell: UITableViewCell {
     private let sunsetTextLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .black
+        label.textColor = .black.withAlphaComponent(0.8)
         label.text = "Sunset"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -71,7 +71,7 @@ class SunAndMoonTableViewCell: UITableViewCell {
     private let sunsetValueLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .black
+        label.textColor = .black.withAlphaComponent(0.8)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -86,7 +86,7 @@ class SunAndMoonTableViewCell: UITableViewCell {
     private let moonriseTextLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .black
+        label.textColor = .black.withAlphaComponent(0.8)
         label.text = "Moonrise"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -95,7 +95,7 @@ class SunAndMoonTableViewCell: UITableViewCell {
     private let moonriseValueLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .black
+        label.textColor = .black.withAlphaComponent(0.8)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -103,7 +103,7 @@ class SunAndMoonTableViewCell: UITableViewCell {
     private let moonsetTextLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .black
+        label.textColor = .black.withAlphaComponent(0.8)
         label.text = "Moonset"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -112,7 +112,7 @@ class SunAndMoonTableViewCell: UITableViewCell {
     private let moonsetValueLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .black
+        label.textColor = .black.withAlphaComponent(0.8)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -126,7 +126,21 @@ class SunAndMoonTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func prepareForReuse() {
+        sunAndMoonLabel.text = nil
+        moonPhaseLabel.text = nil
+        sunriseTextLabel.text = nil
+        sunriseValueLabel.text = nil
+        sunsetTextLabel.text = nil
+        sunsetValueLabel.text = nil
+        moonriseTextLabel.text = nil
+        moonriseValueLabel.text = nil
+        moonsetTextLabel.text = nil
+        moonsetValueLabel.text = nil
+    }
+    
     private func setupUI() {
+        backgroundColor = .systemGray5.withAlphaComponent(0.6)
         addSubview(pointView)
         addSubview(sunAndMoonLabel)
         addSubview(moonPhaseLabel)
@@ -209,7 +223,9 @@ class SunAndMoonTableViewCell: UITableViewCell {
         if let data {
             let dateFormatter: DateFormatter = {
                 let formatter = DateFormatter()
-                formatter.locale = .init(identifier: "ru_RU")
+                if timeFormat == false {
+                    formatter.locale = .init(identifier: "ru_RU")
+                }
                 formatter.dateStyle = .none
                 formatter.timeStyle = .short
                 return formatter
@@ -219,25 +235,6 @@ class SunAndMoonTableViewCell: UITableViewCell {
             sunsetValueLabel.text = "\(dateFormatter.string(from: data.sunset ?? Date()))"
             moonriseValueLabel.text = "\(dateFormatter.string(from: data.moonrise ?? Date()))"
             moonsetValueLabel.text = "\(dateFormatter.string(from: data.moonset ?? Date()))"
-//            let dateFormatter: DateFormatter = {
-//                let formatter = DateFormatter()
-//                formatter.locale = .init(identifier: "ru_RU")
-//                formatter.dateStyle = .none
-//                formatter.timeStyle = .short
-//                return formatter
-//            }()
-//            dateLabel.text = "\(dateFormatter.string(from: data.date ?? Date()))"
-//            airTemperatureLabel.text = "\(data.tempC)"
-//            DownloadManager.defaultManager.downloadImageData(urlString: data.imageURL) { data in
-//                guard let data else { return }
-//                DispatchQueue.main.async {
-//                    self.image.image = UIImage(data: data)
-//                }
-//            }
-//            descriptionLabel.text = "\(String(describing: data.text ?? ""))"
-//            windSpeedValueLabel.text = "\(data.windKph) Kph"
-//            dailyChanceOfRainValueLabel.text = "\(data.chanceOfRain)%"
-//            uvValueLabel.text = "\(data.uv)"
         }
     }
     

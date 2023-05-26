@@ -7,14 +7,14 @@
 
 import UIKit
 
-class WeatherCollectionViewCell: UICollectionViewCell {
+class HourlyWeatherCollectionViewCell: UICollectionViewCell {
     
-    var data: DataByHour?
+    var data: HourlyWeather?
     
     private let dateLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .black
+        label.font = UIFont.systemFont(ofSize: 13)
+        label.textColor = .black.withAlphaComponent(0.8)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -27,15 +27,15 @@ class WeatherCollectionViewCell: UICollectionViewCell {
     
     private let airTemperatureLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 16)
-        label.textColor = .black
+        label.font = UIFont.systemFont(ofSize: 15)
+        label.textColor = .black.withAlphaComponent(0.8)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .systemBackground
+        backgroundColor = .systemGray5.withAlphaComponent(0.6)
         layer.cornerRadius = 15
         clipsToBounds = true
         setupUI()
@@ -43,6 +43,12 @@ class WeatherCollectionViewCell: UICollectionViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func prepareForReuse() {
+        dateLabel.text = nil
+        weatherImage.image = nil
+        airTemperatureLabel.text = nil
     }
     
     private func setupUI() {
@@ -74,20 +80,26 @@ class WeatherCollectionViewCell: UICollectionViewCell {
         if let data {
             let dateFormatter: DateFormatter = {
                 let formatter = DateFormatter()
-                formatter.locale = .init(identifier: "ru_RU")
+                if timeFormat == false {
+                    formatter.locale = .init(identifier: "ru_RU")
+                }
                 formatter.dateStyle = .none
                 formatter.timeStyle = .short
                 return formatter
             }()
             dateLabel.text = "\(dateFormatter.string(from: data.date ?? Date()))"
-            print(dateLabel.text)
             DownloadManager.defaultManager.downloadImageData(urlString: data.imageURL) { data in
                 guard let data else { return }
                 DispatchQueue.main.async {
                     self.weatherImage.image = UIImage(data: data)
                 }
             }
-            airTemperatureLabel.text = "\(data.tempC)"
+            if temperatureFormat {
+                airTemperatureLabel.text = "\(Int(data.tempF))°F"
+            } else {
+                airTemperatureLabel.text = "\(Int(data.tempC))°C"
+            }
+            
         }
         
     }

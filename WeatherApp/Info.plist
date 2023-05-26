@@ -5,11 +5,11 @@
 	<key>UIUserInterfaceStyle</key>
 	<string>Light</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>123</string>
+	<string>We use geolocation to display weather data</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>456</string>
+	<string>We use geolocation to display weather data</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>789</string>
+	<string>We use geolocation to display weather data</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

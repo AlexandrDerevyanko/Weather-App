@@ -8,11 +8,10 @@
 import UIKit
 import CoreData
 
-class CollectionTableViewCell: UITableViewCell, NSFetchedResultsControllerDelegate {
+class HourlyWeatherCollectionTableViewCell: UITableViewCell, NSFetchedResultsControllerDelegate {
     
-//    var location: CurrentLocation?
-    var dataByHour: [DataByHour]?
-    var dataByDay: DataByDay?
+    var dataByHour: [HourlyWeather]?
+    var dataByDay: DailyWeather?
     var viewController: UIViewController?
     
     private lazy var layout: UICollectionViewFlowLayout = {
@@ -23,13 +22,13 @@ class CollectionTableViewCell: UITableViewCell, NSFetchedResultsControllerDelega
     
     private lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.register(WeatherCollectionViewCell.self, forCellWithReuseIdentifier: "WeatherCell")
+        collectionView.register(HourlyWeatherCollectionViewCell.self, forCellWithReuseIdentifier: "WeatherCell")
         collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "DefaultCell")
         collectionView.delegate = self
         collectionView.dataSource = self
-        collectionView.layer.cornerRadius = 15
+//        collectionView.layer.cornerRadius = 15
         collectionView.layer.masksToBounds = true
-        collectionView.backgroundColor = .systemGray5
+        collectionView.backgroundColor = standardBackgroundColor
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }()
@@ -37,6 +36,7 @@ class CollectionTableViewCell: UITableViewCell, NSFetchedResultsControllerDelega
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
+        collectionView.reloadData()
     }
     
     required init?(coder: NSCoder) {
@@ -46,6 +46,7 @@ class CollectionTableViewCell: UITableViewCell, NSFetchedResultsControllerDelega
     private func setupUI() {
         contentView.addSubview(collectionView)
         setupConstraints()
+        collectionView.reloadData()
     }
     
     private func setupConstraints() {
@@ -59,27 +60,25 @@ class CollectionTableViewCell: UITableViewCell, NSFetchedResultsControllerDelega
     
 }
 
-extension CollectionTableViewCell: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
+extension HourlyWeatherCollectionTableViewCell: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
+    
+    private enum Constants {
+        static var numberOfItemsInLIne: CGFloat {
+//            if timeFormat {
+//                return 5
+//            } else {
+//                return 6
+//            }
+            return 6
+        }
+    }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 24
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "WeatherCell", for: indexPath) as? WeatherCollectionViewCell else {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "DefaultCell", for: indexPath)
-            return cell
-        }
-
-        cell.data = dataByHour?[indexPath.row]
-        cell.setup()
-        print(dataByHour?[indexPath.row].date)
-        cell.layer.cornerRadius = 28
-        return cell
-    }
-    
-    private enum Constants {
-        static let numberOfItemsInLIne: CGFloat = 6
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -94,14 +93,23 @@ extension CollectionTableViewCell: UICollectionViewDelegateFlowLayout, UICollect
         
     }
     
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "WeatherCell", for: indexPath) as? HourlyWeatherCollectionViewCell else {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "DefaultCell", for: indexPath)
+            return cell
+        }
+
+        cell.data = dataByHour?[indexPath.row]
+        cell.setup()
+        cell.layer.cornerRadius = 28
+        return cell
+    }
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let hourlyDataVC = HourlyDataViewController()
-        hourlyDataVC.data = dataByDay
+        let hourlyDataVC = HourlyWeatherViewController()
+        hourlyDataVC.data = dataByHour
         self.viewController?.navigationController?.pushViewController(hourlyDataVC, animated: true)
         
-    }
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
     }
     
 }

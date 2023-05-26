@@ -7,14 +7,14 @@
 
 import UIKit
 
-class HourlyDataTableViewCell: UITableViewCell {
+class HourlyWeatherTableViewCell: UITableViewCell {
     
-    var data: DataByHour?
+    var data: HourlyWeather?
     
     private let dateLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .black
+        label.textColor = .black.withAlphaComponent(0.8)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -22,7 +22,7 @@ class HourlyDataTableViewCell: UITableViewCell {
     private let airTemperatureLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 14)
-        label.textColor = .black
+        label.textColor = .black.withAlphaComponent(0.8)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -37,7 +37,8 @@ class HourlyDataTableViewCell: UITableViewCell {
     private let descriptionLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .black
+        label.textColor = .black.withAlphaComponent(0.8)
+        label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -52,7 +53,7 @@ class HourlyDataTableViewCell: UITableViewCell {
     private let windSpeedTextLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .black
+        label.textColor = .black.withAlphaComponent(0.8)
         label.text = "Wind speed"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -61,7 +62,7 @@ class HourlyDataTableViewCell: UITableViewCell {
     private let windSpeedValueLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .black
+        label.textColor = .black.withAlphaComponent(0.8)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -76,7 +77,7 @@ class HourlyDataTableViewCell: UITableViewCell {
     private let dailyChanceOfRainTextLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .black
+        label.textColor = .black.withAlphaComponent(0.8)
         label.text = "Daily chance of rain"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -85,7 +86,7 @@ class HourlyDataTableViewCell: UITableViewCell {
     private let dailyChanceOfRainValueLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .black
+        label.textColor = .black.withAlphaComponent(0.8)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -100,7 +101,7 @@ class HourlyDataTableViewCell: UITableViewCell {
     private let uvTextLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .black
+        label.textColor = .black.withAlphaComponent(0.8)
         label.text = "UV index"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -109,7 +110,7 @@ class HourlyDataTableViewCell: UITableViewCell {
     private let uvValueLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .black
+        label.textColor = .black.withAlphaComponent(0.8)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -124,6 +125,7 @@ class HourlyDataTableViewCell: UITableViewCell {
     }
     
     private func setupUI() {
+        backgroundColor = .systemGray5.withAlphaComponent(0.6)
         addSubview(dateLabel)
         addSubview(airTemperatureLabel)
         addSubview(image)
@@ -157,6 +159,7 @@ class HourlyDataTableViewCell: UITableViewCell {
         }
         descriptionLabel.snp.makeConstraints { make in
             make.top.equalTo(16)
+            make.width.equalTo(120)
             make.centerX.equalTo(snp.centerX)
         }
         windSpeedImage.snp.makeConstraints { make in
@@ -208,13 +211,19 @@ class HourlyDataTableViewCell: UITableViewCell {
         if let data {
             let dateFormatter: DateFormatter = {
                 let formatter = DateFormatter()
-                formatter.locale = .init(identifier: "ru_RU")
+                if timeFormat == false {
+                    formatter.locale = .init(identifier: "ru_RU")
+                }
                 formatter.dateStyle = .none
                 formatter.timeStyle = .short
                 return formatter
             }()
             dateLabel.text = "\(dateFormatter.string(from: data.date ?? Date()))"
-            airTemperatureLabel.text = "\(data.tempC)"
+            if temperatureFormat {
+                airTemperatureLabel.text = "\(Int(data.tempF))°F"
+            } else {
+                airTemperatureLabel.text = "\(Int(data.tempC))°C"
+            }
             DownloadManager.defaultManager.downloadImageData(urlString: data.imageURL) { data in
                 guard let data else { return }
                 DispatchQueue.main.async {
@@ -222,7 +231,7 @@ class HourlyDataTableViewCell: UITableViewCell {
                 }
             }
             descriptionLabel.text = "\(String(describing: data.text ?? ""))"
-            windSpeedValueLabel.text = "\(data.windKph) Kph"
+            windSpeedValueLabel.text = "\(data.windMps) m/s"
             dailyChanceOfRainValueLabel.text = "\(data.chanceOfRain)%"
             uvValueLabel.text = "\(data.uv)"
         }

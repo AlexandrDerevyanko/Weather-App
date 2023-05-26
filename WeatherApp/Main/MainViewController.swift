@@ -9,15 +9,13 @@ import UIKit
 import CoreLocation
 import CoreData
 
-class MainViewController: UIViewController, NSFetchedResultsControllerDelegate {
+class MainViewController: UIViewController, NSFetchedResultsControllerDelegate, CLLocationManagerDelegate {
     
-    var index: Int
-    var locations: [CurrentLocation]
-    var location: CurrentLocation {
-        return locations[index]
+    static func create(index: Int, locations: [City]) -> MainViewController {
+        return MainViewController(index: index, locations: locations)
     }
     
-    init(index: Int, locations: [CurrentLocation]) {
+    init(index: Int, locations: [City]) {
         self.index = index
         self.locations = locations
         super.init(nibName: nil, bundle: nil)
@@ -27,18 +25,25 @@ class MainViewController: UIViewController, NSFetchedResultsControllerDelegate {
         fatalError("init(coder:) has not been implemented")
     }
     
-    var dataByDayFetchResultsController: NSFetchedResultsController<DataByDay>?
-    var dataByHourFetchResultsController: NSFetchedResultsController<DataByHour>?
-    var currentDataFetchResultsController: NSFetchedResultsController<CurrentData>?
+    var delegate: PagesViewDelegate?
+    var index: Int
+    var locations: [City]
+    private var location: City {
+        return locations[index]
+    }
+    
+    private var dailyWeatherFetchResultsController: NSFetchedResultsController<DailyWeather>?
+    private var hourlyWeatherFetchResultsController: NSFetchedResultsController<HourlyWeather>?
+    private var currentWeatherFetchResultsController: NSFetchedResultsController<CurrentWeather>?
     
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
-        tableView.backgroundColor = .systemBackground
+        tableView.backgroundColor = standardBackgroundColor
         tableView.dataSource = self
         tableView.delegate = self
         tableView.rowHeight = UITableView.automaticDimension
-        tableView.register(DaytimeWeatherTableViewCell.self, forCellReuseIdentifier: "DaytimeWeatherCell")
-        tableView.register(CollectionTableViewCell.self, forCellReuseIdentifier: "CollectionCell")
+        tableView.register(DailyWeatherTableViewCell.self, forCellReuseIdentifier: "DaytimeWeatherCell")
+        tableView.register(HourlyWeatherCollectionTableViewCell.self, forCellReuseIdentifier: "CollectionCell")
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "DefaultCell")
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
@@ -48,81 +53,71 @@ class MainViewController: UIViewController, NSFetchedResultsControllerDelegate {
         super.viewDidLoad()
         initFetchResultsControllers()
         setupUI()
-        navigationItem.setHidesBackButton(true, animated: true)
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        title = location.name
+        addWeatherHistory()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        let appearance = UINavigationBarAppearance()
-        appearance.backgroundColor = .systemGray6
-        appearance.titleTextAttributes = [.foregroundColor: UIColor.black]
-        appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.black]
-        navigationController?.navigationBar.tintColor = .black
-        navigationController?.navigationBar.standardAppearance = appearance
-        navigationController?.navigationBar.compactAppearance = appearance
-        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        delegate?.changeTitle(title: location.name ?? "")
+        reloadData()
     }
     
     func initFetchResultsControllers() {
-        let firstFetchRequest = DataByDay.fetchRequest()
-        let secondFetchRequest = DataByHour.fetchRequest()
-        let thirdFetchRequest = CurrentData.fetchRequest()
+        let DailyWeatherFetchRequest = DailyWeather.fetchRequest()
+        let HourlyWeatherFetchRequest = HourlyWeather.fetchRequest()
+        let CurrentWeatherFetchRequest = CurrentWeather.fetchRequest()
         
-        firstFetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
-        secondFetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
-        thirdFetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
+        DailyWeatherFetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
+        HourlyWeatherFetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
+        CurrentWeatherFetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
         
-        firstFetchRequest.predicate = NSPredicate(format: "location == %@", location)
-        secondFetchRequest.predicate = NSPredicate(format: "location == %@", location)
-        thirdFetchRequest.predicate = NSPredicate(format: "location == %@", location)
+        DailyWeatherFetchRequest.predicate = NSPredicate(format: "location == %@", location)
+        HourlyWeatherFetchRequest.predicate = NSPredicate(format: "location == %@ AND date >= %@", location, Date() as CVarArg)
+        CurrentWeatherFetchRequest.predicate = NSPredicate(format: "location == %@", location)
 
-        dataByDayFetchResultsController = NSFetchedResultsController(fetchRequest: firstFetchRequest, managedObjectContext: CoreDataManager.defaultManager.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
-        dataByDayFetchResultsController?.delegate = self
-        try? dataByDayFetchResultsController?.performFetch()
+        dailyWeatherFetchResultsController = NSFetchedResultsController(fetchRequest: DailyWeatherFetchRequest, managedObjectContext: CoreDataManager.defaultManager.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+        dailyWeatherFetchResultsController?.delegate = self
+        try? dailyWeatherFetchResultsController?.performFetch()
         
-        dataByHourFetchResultsController = NSFetchedResultsController(fetchRequest: secondFetchRequest, managedObjectContext: CoreDataManager.defaultManager.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
-        dataByHourFetchResultsController?.delegate = self
-        try? dataByHourFetchResultsController?.performFetch()
+        hourlyWeatherFetchResultsController = NSFetchedResultsController(fetchRequest: HourlyWeatherFetchRequest, managedObjectContext: CoreDataManager.defaultManager.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+        hourlyWeatherFetchResultsController?.delegate = self
+        try? hourlyWeatherFetchResultsController?.performFetch()
         
-        currentDataFetchResultsController = NSFetchedResultsController(fetchRequest: thirdFetchRequest, managedObjectContext: CoreDataManager.defaultManager.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
-        currentDataFetchResultsController?.delegate = self
-        try? currentDataFetchResultsController?.performFetch()
+        currentWeatherFetchResultsController = NSFetchedResultsController(fetchRequest: CurrentWeatherFetchRequest, managedObjectContext: CoreDataManager.defaultManager.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+        currentWeatherFetchResultsController?.delegate = self
+        try? currentWeatherFetchResultsController?.performFetch()
+    }
+    
+    func reloadData() {
+        tableView.reloadData()
+    }
+    
+    func addWeatherHistory() {
+        guard let data = hourlyWeatherFetchResultsController?.fetchedObjects else { return }
+        weatherHistoryArray.removeAll()
+        var index = 0
+        for i in data {
+            index += 1
+            if index == 24 {
+                return
+            }
+            if index % 3 == 0 {
+                weatherHistoryArray.append(WeatherModel(temperature: i.tempC, date: i.date ?? Date()))
+            }
+            
+        }
     }
 
     private func setupUI() {
-        view.backgroundColor = .systemBlue
+        view.backgroundColor = standardBackgroundColor
         view.addSubview(tableView)
         setupConstraints()
-        setupButtons()
     }
     
     private func setupConstraints() {
         tableView.snp.makeConstraints { make in
             make.edges.equalTo(view)
         }
-    }
-    
-    private func setupButtons() {
-        let leftButton = UIBarButtonItem(image: UIImage(systemName: "line.horizontal.3"), style: .plain, target: self, action: #selector(leftButtonPressed))
-        let rightButton = UIBarButtonItem(image: UIImage(systemName: "location"), style: .plain, target: self, action: #selector(rightButtonPressed))
-        navigationItem.rightBarButtonItem = rightButton
-        navigationItem.leftBarButtonItem = leftButton
-    }
-    
-    @objc
-    private func leftButtonPressed() {
-        let settingsVC = SettingsViewController()
-        navigationController?.pushViewController(settingsVC, animated: true)
-    }
-    
-    @objc
-    private func rightButtonPressed() {
-        
     }
 
 }
@@ -132,7 +127,7 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if section == 0 {
             let cell = MainView()
-            let data = currentDataFetchResultsController?.fetchedObjects?[0] ?? nil
+            let data = currentWeatherFetchResultsController?.fetchedObjects?[0] ?? nil
             cell.data = data
             cell.setup()
             return cell
@@ -141,7 +136,7 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "Ежедневный прогноз"
+        return "Daily weather forecast"
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -152,7 +147,7 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
         if section == 0 {
             return 1
         }
-        return dataByDayFetchResultsController?.fetchedObjects?.count ?? 0
+        return dailyWeatherFetchResultsController?.fetchedObjects?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -164,19 +159,21 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: "CollectionCell", for: indexPath) as? CollectionTableViewCell else {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "CollectionCell", for: indexPath) as? HourlyWeatherCollectionTableViewCell else {
                 preconditionFailure("Error")
             }
-            cell.dataByHour = dataByHourFetchResultsController?.fetchedObjects
+            cell.dataByHour = hourlyWeatherFetchResultsController?.fetchedObjects
             cell.viewController = self
+//            addWeatherHistory()
             return cell
         }
 
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "DaytimeWeatherCell", for: indexPath) as? DaytimeWeatherTableViewCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "DaytimeWeatherCell", for: indexPath) as? DailyWeatherTableViewCell else {
             preconditionFailure("Error")
         }
         cell.accessoryType = .disclosureIndicator
-        cell.data = dataByDayFetchResultsController?.fetchedObjects?[indexPath.row]
+        cell.data = dailyWeatherFetchResultsController?.fetchedObjects?[indexPath.row]
+//        cell.layer.cornerRadius = 20
         cell.setup()
         return cell
     }
@@ -185,10 +182,13 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.section == 1 {
             print(indexPath.row)
-            let dailyVC = DailyViewController()
-            dailyVC.data = dataByDayFetchResultsController?.fetchedObjects?[indexPath.row]
-//            print(dataByDayFetchResultsController?.fetchedObjects?[indexPath.row].date)
-            navigationController?.pushViewController(dailyVC, animated: true)
+            if let dailyData = dailyWeatherFetchResultsController?.fetchedObjects {
+                let dailyVC = DailyPagesViewController(currentIndex: indexPath.row, dailyData: dailyData)
+                navigationController?.pushViewController(dailyVC, animated: true)
+            }
+            
         }
     }
+    
+    
 }

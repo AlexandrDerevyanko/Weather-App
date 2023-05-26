@@ -7,14 +7,14 @@
 
 import UIKit
 
-class DailyTableViewCell: UITableViewCell {
+class DayWeatherTableViewCell: UITableViewCell {
     
-    var data: DataByHour?
+    var data: HourlyWeather?
     
     let dateLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .black
+        label.textColor = .black.withAlphaComponent(0.8)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -22,7 +22,7 @@ class DailyTableViewCell: UITableViewCell {
     private let airTemperatureLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 14)
-        label.textColor = .black
+        label.textColor = .black.withAlphaComponent(0.8)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -37,7 +37,7 @@ class DailyTableViewCell: UITableViewCell {
     private let descriptionLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .black
+        label.textColor = .black.withAlphaComponent(0.8)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -52,7 +52,7 @@ class DailyTableViewCell: UITableViewCell {
     private let windSpeedTextLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .black
+        label.textColor = .black.withAlphaComponent(0.8)
         label.text = "Wind speed"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -61,7 +61,7 @@ class DailyTableViewCell: UITableViewCell {
     private let windSpeedValueLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .black
+        label.textColor = .black.withAlphaComponent(0.8)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -76,7 +76,7 @@ class DailyTableViewCell: UITableViewCell {
     private let dailyChanceOfRainTextLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .black
+        label.textColor = .black.withAlphaComponent(0.8)
         label.text = "Daily chance of rain"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -85,7 +85,7 @@ class DailyTableViewCell: UITableViewCell {
     private let dailyChanceOfRainValueLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .black
+        label.textColor = .black.withAlphaComponent(0.8)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -100,7 +100,7 @@ class DailyTableViewCell: UITableViewCell {
     private let uvTextLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .black
+        label.textColor = .black.withAlphaComponent(0.8)
         label.text = "UV index"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -109,7 +109,7 @@ class DailyTableViewCell: UITableViewCell {
     private let uvValueLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .black
+        label.textColor = .black.withAlphaComponent(0.8)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -123,7 +123,21 @@ class DailyTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func prepareForReuse() {
+        dateLabel.text = nil
+        airTemperatureLabel.text = nil
+        image.image = nil
+        descriptionLabel.text = nil
+        windSpeedTextLabel.text = nil
+        windSpeedValueLabel.text = nil
+        dailyChanceOfRainTextLabel.text = nil
+        dailyChanceOfRainValueLabel.text = nil
+        uvTextLabel.text = nil
+        uvValueLabel.text = nil
+    }
+    
     private func setupUI() {
+        backgroundColor = .systemGray5.withAlphaComponent(0.6)
         addSubview(dateLabel)
         addSubview(airTemperatureLabel)
         addSubview(image)
@@ -206,15 +220,12 @@ class DailyTableViewCell: UITableViewCell {
     
     func setup () {
         if let data {
-//            let dateFormatter: DateFormatter = {
-//                let formatter = DateFormatter()
-//                formatter.locale = .init(identifier: "ru_RU")
-//                formatter.dateStyle = .none
-//                formatter.timeStyle = .short
-//                return formatter
-//            }()
-//            dateLabel.text = "\(dateFormatter.string(from: data.date ?? Date()))"
-            airTemperatureLabel.text = "\(data.tempC)"
+            if temperatureFormat {
+                airTemperatureLabel.text = "\(Int(data.tempF))°F"
+            } else {
+                airTemperatureLabel.text = "\(Int(data.tempC))°C"
+            }
+            
             DownloadManager.defaultManager.downloadImageData(urlString: data.imageURL) { data in
                 guard let data else { return }
                 DispatchQueue.main.async {
@@ -222,9 +233,9 @@ class DailyTableViewCell: UITableViewCell {
                 }
             }
             descriptionLabel.text = "\(String(describing: data.text ?? ""))"
-            windSpeedValueLabel.text = "\(data.windKph) Kph"
+            windSpeedValueLabel.text = "\(data.windMps) m/s"
             dailyChanceOfRainValueLabel.text = "\(data.chanceOfRain)%"
-            uvValueLabel.text = "\(data.uv)"
+            uvValueLabel.text = "\(Int(data.uv))"
         }
     }
     

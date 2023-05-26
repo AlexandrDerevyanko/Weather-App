@@ -11,6 +11,7 @@ class SettingsTableViewCell: UITableViewCell {
     
     var title: String?
     var value: [String]?
+    var boolean: Bool?
     
     private let stackView: UIStackView = {
         let stackView = UIStackView()
@@ -23,7 +24,7 @@ class SettingsTableViewCell: UITableViewCell {
     private let descriptionLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14)
-        label.textColor = .black
+        label.textColor = .black.withAlphaComponent(0.8)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -53,6 +54,7 @@ class SettingsTableViewCell: UITableViewCell {
     }
     
     private func setupUI() {
+        backgroundColor = .clear
         contentView.addSubview(descriptionLabel)
         contentView.addSubview(stackView)
         stackView.addArrangedSubview(falseButton)
@@ -76,16 +78,18 @@ class SettingsTableViewCell: UITableViewCell {
         falseButton.addTarget(self, action: #selector(falseButtonPressed), for: .touchUpInside)
     }
     
-    func setup (text: String, value: [String], boolean: Bool) {
-        descriptionLabel.text = text
-        falseButton.setTitle(value[0], for: .normal)
-        trueButton.setTitle(value[1], for: .normal)
-        if boolean {
-            trueButton.backgroundColor = .systemBlue
-            falseButton.backgroundColor = .systemGray2
-        } else {
-            falseButton.backgroundColor = .systemBlue
-            trueButton.backgroundColor = .systemGray2
+    func setup () {
+        if let title, let value, let boolean {
+            descriptionLabel.text = title
+            falseButton.setTitle(value[0], for: .normal)
+            trueButton.setTitle(value[1], for: .normal)
+            if boolean {
+                trueButton.backgroundColor = standardBackgroundColor
+                falseButton.backgroundColor = .systemGray2.withAlphaComponent(0.8)
+            } else {
+                falseButton.backgroundColor = standardBackgroundColor
+                trueButton.backgroundColor = .systemGray2.withAlphaComponent(0.8)
+            }
         }
     }
     
@@ -94,12 +98,13 @@ class SettingsTableViewCell: UITableViewCell {
         if let title {
             if title == "Temperature" {
                 UserDefaults.standard.set(false, forKey: title)
-                trueButton.backgroundColor = .systemGray2
-                falseButton.backgroundColor = .systemBlue
+                trueButton.backgroundColor = .systemGray2.withAlphaComponent(0.8)
+                falseButton.backgroundColor = standardBackgroundColor
             } else if title == "Time format" {
                 UserDefaults.standard.set(false, forKey: title)
-                trueButton.backgroundColor = .systemGray2
-                falseButton.backgroundColor = .systemBlue
+                UserDefaults.standard.synchronize()
+                trueButton.backgroundColor = .systemGray2.withAlphaComponent(0.8)
+                falseButton.backgroundColor = standardBackgroundColor
             }
         }
     }
@@ -109,12 +114,13 @@ class SettingsTableViewCell: UITableViewCell {
         if let title {
             if title == "Temperature" {
                 UserDefaults.standard.set(true, forKey: title)
-                trueButton.backgroundColor = .systemBlue
-                falseButton.backgroundColor = .systemGray2
+                UserDefaults.standard.synchronize()
+                trueButton.backgroundColor = standardBackgroundColor
+                falseButton.backgroundColor = .systemGray2.withAlphaComponent(0.8)
             } else if title == "Time format" {
                 UserDefaults.standard.set(true, forKey: title)
-                trueButton.backgroundColor = .systemBlue
-                falseButton.backgroundColor = .systemGray2
+                trueButton.backgroundColor = standardBackgroundColor
+                falseButton.backgroundColor = .systemGray2.withAlphaComponent(0.8)
             }
         }
     }

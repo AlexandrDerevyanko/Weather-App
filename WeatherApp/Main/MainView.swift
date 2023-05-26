@@ -9,7 +9,7 @@ import UIKit
 
 class MainView: UIView {
     
-    var data: CurrentData?
+    var data: CurrentWeather?
     
     private let minMaxAirTemperatureLabel: UILabel = {
         let label = UILabel()
@@ -126,12 +126,26 @@ class MainView: UIView {
         return label
     }()
     
+    private let sunriseImage: UIImageView = {
+        let image = UIImageView()
+        image.image = UIImage(named: "sunrise")
+        image.translatesAutoresizingMaskIntoConstraints = false
+        return image
+    }()
+    
     private let sunriseLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
+    }()
+    
+    private let sunsetImage: UIImageView = {
+        let image = UIImageView()
+        image.image = UIImage(named: "sunset")
+        image.translatesAutoresizingMaskIntoConstraints = false
+        return image
     }()
     
     private let sunsetLabel: UILabel = {
@@ -152,7 +166,7 @@ class MainView: UIView {
     }
     
     private func setupUI() {
-        backgroundColor = .systemBlue
+        backgroundColor = standardBackgroundColor
         addSubview(minMaxAirTemperatureLabel)
         addSubview(airTemperatureLabel)
         addSubview(textLabel)
@@ -171,7 +185,9 @@ class MainView: UIView {
         stackView.addArrangedSubview(secondStackView)
         stackView.addArrangedSubview(thirdStackView)
         addSubview(dateLabel)
+        addSubview(sunriseImage)
         addSubview(sunriseLabel)
+        addSubview(sunsetImage)
         addSubview(sunsetLabel)
         setupConstraints()
     }
@@ -216,9 +232,21 @@ class MainView: UIView {
             make.centerX.equalTo(snp.centerX)
             make.bottom.equalTo(-20)
         }
+        sunriseImage.snp.makeConstraints { make in
+            make.width.equalTo(23)
+            make.height.equalTo(23)
+            make.bottom.equalTo(sunriseLabel.snp.top).offset(-3)
+            make.centerX.equalTo(sunriseLabel.snp.centerX)
+        }
         sunriseLabel.snp.makeConstraints { make in
             make.left.equalTo(16)
             make.bottom.equalTo(-20)
+        }
+        sunsetImage.snp.makeConstraints { make in
+            make.width.equalTo(23)
+            make.height.equalTo(23)
+            make.bottom.equalTo(sunsetLabel.snp.top).offset(-3)
+            make.centerX.equalTo(sunsetLabel.snp.centerX)
         }
         sunsetLabel.snp.makeConstraints { make in
             make.right.equalTo(-16)
@@ -230,20 +258,21 @@ class MainView: UIView {
         if let data {
             let dateFormatter: DateFormatter = {
                 let formatter = DateFormatter()
-                formatter.locale = .init(identifier: "ru_RU")
-                formatter.dateStyle = .full
+                if timeFormat == false {
+                    formatter.locale = .init(identifier: "ru_RU")
+                }
+                formatter.dateStyle = .long
                 formatter.timeStyle = .short
                 return formatter
             }()
-//            let timeDateFormatter: DateFormatter = {
-//                let formatter = DateFormatter()
-//                formatter.locale = .init(identifier: "ru_RU")
-//                formatter.dateStyle = .none
-//                formatter.timeStyle = .short
-//                return formatter
-//            }()
-            minMaxAirTemperatureLabel.text = "\(data.minTempC) / \(data.maxTempC)"
-            airTemperatureLabel.text = "\(data.tempC)°"
+            if temperatureFormat {
+                minMaxAirTemperatureLabel.text = "\(Int(data.minTempF))°F / \(Int(data.maxTempF))°F"
+                airTemperatureLabel.text = "\(Int(data.tempF))°F"
+            } else {
+                minMaxAirTemperatureLabel.text = "\(Int(data.minTempC))°C / \(Int(data.maxTempC))°C"
+                airTemperatureLabel.text = "\(Int(data.tempC))°C"
+            }
+            
             textLabel.text = "\(String(describing: data.text ?? ""))"
             DownloadManager.defaultManager.downloadImageData(urlString: data.imageURL) { data in
                 guard let data else { return }
@@ -251,10 +280,8 @@ class MainView: UIView {
                     self.weatherImage.image = UIImage(data: data)
                 }
             }
-            
-            
             uvIndexLabel.text = "\(data.uv)"
-            windSpeedLabel.text = "\(Int(data.windMps))"
+            windSpeedLabel.text = "\(Int(data.windMps)) m/s"
             dailyChanceOfRainLabel.text = "\(data.dailyChanceOfRain)%"
             dateLabel.text = "\(dateFormatter.string(from: data.date ?? Date()))"
             dateFormatter.dateStyle = .none
@@ -263,4 +290,24 @@ class MainView: UIView {
         }
     }
     
+//    override func draw(_ rect: CGRect) {
+//        let rect1 = CGRect(x: 0, y: 0, width: rect.width, height: rect.height)
+//        drawCircular(in: rect1)
+//    }
+//
+//    private func drawCircular(in rect: CGRect) {
+//        let center =  CGPoint(x: rect.width / 2, y: rect.height - 40)
+//        let radius = (rect.width / 2) - 20
+//
+//        let path = UIBezierPath(arcCenter: center, radius: radius, startAngle: 0, endAngle: 3 * CGFloat.pi, clockwise: false)
+//
+//        path.lineWidth = 4
+//        path.lineCapStyle = .round
+//
+//        let color = UIColor.orange
+//        color.setStroke()
+//
+//        path.stroke()
+//    }
+//
 }

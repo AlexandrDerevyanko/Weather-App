@@ -9,6 +9,15 @@ import Foundation
 import UIKit
 import CoreData
 
+var temperatureFormat: Bool {
+    return UserDefaults.standard.bool(forKey: "Temperature")
+}
+var timeFormat: Bool {
+    return UserDefaults.standard.bool(forKey: "Time format")
+}
+
+var standardBackgroundColor: UIColor = UIColor(patternImage: UIImage(named: "background") ?? UIImage())
+
 final class CustomButton: UIButton {
     typealias Action = () -> Void
     

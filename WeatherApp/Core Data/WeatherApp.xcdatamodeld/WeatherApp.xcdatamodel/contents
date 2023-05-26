@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21754" systemVersion="22E261" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="CurrentData" representedClassName="CurrentData" syncable="YES" codeGenerationType="class">
+    <entity name="City" representedClassName="City" syncable="YES" codeGenerationType="class">
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="currentData" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CurrentWeather" inverseName="location" inverseEntity="CurrentWeather"/>
+        <relationship name="dataBuHour" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="HourlyWeather" inverseName="location" inverseEntity="HourlyWeather"/>
+        <relationship name="dataByDay" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="DailyWeather" inverseName="location" inverseEntity="DailyWeather"/>
+    </entity>
+    <entity name="CurrentWeather" representedClassName="CurrentWeather" syncable="YES" codeGenerationType="class">
         <attribute name="dailyChanceOfRain" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="imageURL" optional="YES" attributeType="String"/>
@@ -16,16 +23,9 @@
         <attribute name="uv" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="windMph" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="windMps" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <relationship name="location" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CurrentLocation" inverseName="currentData" inverseEntity="CurrentLocation"/>
+        <relationship name="location" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="City" inverseName="currentData" inverseEntity="City"/>
     </entity>
-    <entity name="CurrentLocation" representedClassName="CurrentLocation" syncable="YES" codeGenerationType="class">
-        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="name" optional="YES" attributeType="String"/>
-        <relationship name="currentData" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CurrentData" inverseName="location" inverseEntity="CurrentData"/>
-        <relationship name="dataBuHour" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="DataByHour" inverseName="location" inverseEntity="DataByHour"/>
-        <relationship name="dataByDay" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="DataByDay" inverseName="location" inverseEntity="DataByDay"/>
-    </entity>
-    <entity name="DataByDay" representedClassName="DataByDay" syncable="YES" codeGenerationType="class">
+    <entity name="DailyWeather" representedClassName="DailyWeather" syncable="YES" codeGenerationType="class">
         <attribute name="dailyChanceOfRain" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="dateString" optional="YES" attributeType="String"/>
@@ -40,28 +40,21 @@
         <attribute name="sunrise" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="sunset" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="text" optional="YES" attributeType="String"/>
-        <relationship name="dataByHour" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="DataByHour" inverseName="dataByDay" inverseEntity="DataByHour"/>
-        <relationship name="location" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CurrentLocation" inverseName="dataByDay" inverseEntity="CurrentLocation"/>
+        <relationship name="dataByHour" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="HourlyWeather" inverseName="dataByDay" inverseEntity="HourlyWeather"/>
+        <relationship name="location" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="City" inverseName="dataByDay" inverseEntity="City"/>
     </entity>
-    <entity name="DataByHour" representedClassName="DataByHour" syncable="YES" codeGenerationType="class">
+    <entity name="HourlyWeather" representedClassName="HourlyWeather" syncable="YES" codeGenerationType="class">
         <attribute name="chanceOfRain" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="dateString" optional="YES" attributeType="String"/>
         <attribute name="imageURL" optional="YES" attributeType="String"/>
         <attribute name="tempC" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="tempF" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="text" optional="YES" attributeType="String"/>
         <attribute name="uv" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <attribute name="windKph" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="windMph" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <relationship name="dataByDay" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="DataByDay" inverseName="dataByHour" inverseEntity="DataByDay"/>
-        <relationship name="location" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CurrentLocation" inverseName="dataBuHour" inverseEntity="CurrentLocation"/>
-    </entity>
-    <entity name="Settings" representedClassName="Settings" syncable="YES" codeGenerationType="class">
-        <attribute name="speedFormat" attributeType="Boolean" usesScalarValueType="YES"/>
-        <attribute name="speedFormatDescription" attributeType="String"/>
-        <attribute name="temperatureFormat" attributeType="Boolean" usesScalarValueType="YES"/>
-        <attribute name="temperatureFormatDescription" attributeType="String"/>
-        <attribute name="timeFormat" attributeType="Boolean" usesScalarValueType="YES"/>
-        <attribute name="timeFormatDescription" attributeType="String"/>
+        <attribute name="windMps" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <relationship name="dataByDay" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="DailyWeather" inverseName="dataByHour" inverseEntity="DailyWeather"/>
+        <relationship name="location" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="City" inverseName="dataBuHour" inverseEntity="City"/>
     </entity>
 </model>

@@ -12,9 +12,6 @@ class CoreDataManager {
     
     static let defaultManager = CoreDataManager()
     
-    init() {
-        setFirstRunSettings()
-    }
     
     lazy var persistentContainer: NSPersistentContainer = {
 
@@ -29,76 +26,34 @@ class CoreDataManager {
         return container
     }()
     
-//    // Получение массива данных о погоде
-//    var currentData: [CurrentData] {
-//        let fetchRequest = CurrentData.fetchRequest()
+//    // Получение массива локаций
+//    var locationArray: [City] {
+//        let fetchRequest = City.fetchRequest()
 //        return (try? persistentContainer.viewContext.fetch(fetchRequest)) ?? []
 //    }
-//
-//    // Добавление локации
-//    func addLocation(data: Weather) {
-//        persistentContainer.performBackgroundTask { contextBackground in
-//            let location = CurrentLocation(context: contextBackground)
-//            location.name = data.location?.name ?? ""
-//
-//            do {
-//                try contextBackground.save()
-//            } catch {
-//                print(error)
-//            }
-//        }
-//    }
-    
-    // Получение массива локаций
-    var locationArray: [CurrentLocation] {
-        let fetchRequest = CurrentLocation.fetchRequest()
-        return (try? persistentContainer.viewContext.fetch(fetchRequest)) ?? []
-    }
     
     // Получение локации по названию
-    func getLocation(name: String, context: NSManagedObjectContext) -> CurrentLocation? {
-        let fetchRequest = CurrentLocation.fetchRequest()
+    func getLocation(name: String, context: NSManagedObjectContext) -> City? {
+        let fetchRequest = City.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "name == %@", name)
         return (try? context.fetch(fetchRequest))?.first
     }
     
     // Получение сущности DataByDay по дате
-    func getDataByDay(dateString: String, context: NSManagedObjectContext) -> DataByDay? {
-        let fetchRequest = DataByDay.fetchRequest()
+    func getDataByDay(dateString: String, context: NSManagedObjectContext) -> DailyWeather? {
+        let fetchRequest = DailyWeather.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "dateString == %@", dateString)
         return (try? context.fetch(fetchRequest))?.first
     }
-
-    func addData(data:Weather, completion: ((_ success: Bool) -> ())) {
-        
-        if locationArray.count != 0 {
-            completion(true)
-            return
-        }
-        
-        addData2(data: data) { success in
-            if success {
-                completion(true)
-            }
-        }
-        
-    }
     
-    func addData2(data:Weather, completion: ((_ success: Bool) -> ())) {
+    func addData(data:Weather, completion: ((_ success: Bool) -> ())?) {
         
         persistentContainer.performBackgroundTask { contextBackground in
-            let location = CurrentLocation(context: contextBackground)
+            let location = City(context: contextBackground)
             location.name = data.location?.name ?? ""
             location.date = Date()
             
-            do {
-                try contextBackground.save()
-            } catch {
-                print(error)
-            }
-        }
-        persistentContainer.performBackgroundTask { contextBackground in
-            let currentData = CurrentData(context: contextBackground)
+            let currentWeather = CurrentWeather(context: contextBackground)
             let dayData = data.forecast?.forecastday?[0].day
             let dataCurrent = data.current
             let lastUpdatedDate = dataCurrent?.lastUpdated ?? ""
@@ -109,23 +64,26 @@ class CoreDataManager {
             timeDateFormatter.dateFormat = "HH:mm a"
             timeDateFormatter.timeZone = TimeZone(abbreviation: "GMT+00:00")
             dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
-            currentData.tempC = dataCurrent?.tempC ?? 0
-            currentData.minTempC = dayData?.mintempC ?? 0
-            currentData.maxTempC = dayData?.maxtempC ?? 0
-            currentData.date = dateFormatter.date(from:lastUpdatedDate)
-            currentData.sunset = timeDateFormatter.date(from: sunsetTime)
-            currentData.sunrise = timeDateFormatter.date(from: sunriseTime)
-            currentData.text = dataCurrent?.condition?.text
-            currentData.dailyChanceOfRain = dayData?.dailyChanceOfRain ?? 0
-            currentData.uv = dayData?.uv ?? 0
-            currentData.windMps = ((dataCurrent?.windKph ?? 0) / 3.6)
-            currentData.imageURL = dataCurrent?.condition?.icon
-            currentData.location = self.getLocation(name: data.location?.name ?? "", context: contextBackground)
+            currentWeather.tempC = dataCurrent?.tempC ?? 0
+            currentWeather.tempF = dataCurrent?.tempF ?? 0
+            currentWeather.minTempC = dayData?.mintempC ?? 0
+            currentWeather.maxTempC = dayData?.maxtempC ?? 0
+            currentWeather.minTempF = dayData?.mintempF ?? 0
+            currentWeather.maxTempF = dayData?.maxtempF ?? 0
+            currentWeather.date = dateFormatter.date(from:lastUpdatedDate)
+            currentWeather.sunset = timeDateFormatter.date(from: sunsetTime)
+            currentWeather.sunrise = timeDateFormatter.date(from: sunriseTime)
+            currentWeather.text = dataCurrent?.condition?.text
+            currentWeather.dailyChanceOfRain = dayData?.dailyChanceOfRain ?? 0
+            currentWeather.uv = dayData?.uv ?? 0
+            currentWeather.windMps = ((dataCurrent?.windKph ?? 0) / 3.6)
+            currentWeather.imageURL = dataCurrent?.condition?.icon
+            currentWeather.location = location
             let dataArray = data.forecast?.forecastday
             if let dataArray {
                 for index in dataArray {
                     
-                    let dataByDay = DataByDay(context: contextBackground)
+                    let dailyWeather = DailyWeather(context: contextBackground)
                     let dayData = index.day
                     let isoDate = index.date ?? ""
                     let dateFormatter = DateFormatter()
@@ -136,31 +94,33 @@ class CoreDataManager {
                     let timeDateFormatter = DateFormatter()
                     timeDateFormatter.dateFormat = "HH:mm a"
                     timeDateFormatter.timeZone = TimeZone(abbreviation: "GMT+00:00")
-                    dataByDay.maxTempC = dayData?.maxtempC ?? 0
-                    dataByDay.minTempC = dayData?.mintempC ?? 0
-                    dataByDay.date = dateFormatter.date(from:isoDate.components(separatedBy: " ").first ?? "")
-                    dataByDay.dateString = isoDate
-                    dataByDay.dailyChanceOfRain = dayData?.dailyChanceOfRain ?? 0
-                    dataByDay.text = dayData?.condition?.text
-                    dataByDay.imageURL = dayData?.condition?.icon
-                    dataByDay.location = self.getLocation(name: data.location?.name ?? "", context: contextBackground)
-                    dataByDay.sunrise = timeDateFormatter.date(from: index.astro?.sunrise ?? "")
-                    dataByDay.sunset = timeDateFormatter.date(from: index.astro?.sunset ?? "")
-                    dataByDay.moonrise = timeDateFormatter.date(from: index.astro?.moonrise ?? "")
-                    dataByDay.moonset = timeDateFormatter.date(from: index.astro?.moonset ?? "")
-                    dataByDay.moonPhase = index.astro?.moonPhase
+                    dailyWeather.maxTempC = dayData?.maxtempC ?? 0
+                    dailyWeather.minTempC = dayData?.mintempC ?? 0
+                    dailyWeather.maxTempF = dayData?.maxtempF ?? 0
+                    dailyWeather.minTempF = dayData?.mintempF ?? 0
+                    dailyWeather.date = dateFormatter.date(from:isoDate.components(separatedBy: " ").first ?? "")
+                    dailyWeather.dateString = isoDate
+                    dailyWeather.dailyChanceOfRain = dayData?.dailyChanceOfRain ?? 0
+                    dailyWeather.text = dayData?.condition?.text
+                    dailyWeather.imageURL = dayData?.condition?.icon
+                    dailyWeather.location = location
+                    dailyWeather.sunrise = timeDateFormatter.date(from: index.astro?.sunrise ?? "")
+                    dailyWeather.sunset = timeDateFormatter.date(from: index.astro?.sunset ?? "")
+                    dailyWeather.moonrise = timeDateFormatter.date(from: index.astro?.moonrise ?? "")
+                    dailyWeather.moonset = timeDateFormatter.date(from: index.astro?.moonset ?? "")
+                    dailyWeather.moonPhase = index.astro?.moonPhase
                 }
             }
             
-            let hourlyDataArray = data.forecast?.forecastday
-            if let hourlyDataArray {
-                for i in hourlyDataArray {
+            let hourlyWeatherArray = data.forecast?.forecastday
+            if let hourlyWeatherArray {
+                for i in hourlyWeatherArray {
                     let date = i.date ?? ""
                     let hourlyData = i.hour
                     if let hourlyData {
                         for index in hourlyData {
-                            let dataByHour = DataByHour(context: contextBackground)
-                            dataByHour.dataByDay = self.getDataByDay(dateString: date, context: contextBackground)
+                            let hourlyWeather = HourlyWeather(context: contextBackground)
+                            hourlyWeather.dataByDay = self.getDataByDay(dateString: date, context: contextBackground)
                             let isoDate = index.time ?? ""
                             let dateFormatter = DateFormatter()
                             dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
@@ -168,78 +128,40 @@ class CoreDataManager {
                             dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
                             dateFormatter.locale = Locale(identifier: "en_US_POSIX")
                             let date = dateFormatter.date(from:isoDate)
-                            dataByHour.date = date
-                            dataByHour.tempC = index.tempC ?? 0
-                            dataByHour.imageURL = index.condition?.icon
-                            dataByHour.chanceOfRain = index.chanceOfRain ?? 0
-                            dataByHour.text = index.condition?.text
-                            dataByHour.windMph = index.windMph ?? 0
-                            dataByHour.windKph = index.windKph ?? 0
-                            dataByHour.uv = index.uv ?? 0
-                            dataByHour.location = self.getLocation(name: data.location?.name ?? "", context: contextBackground)
+                            hourlyWeather.date = date
+                            hourlyWeather.dateString = isoDate
+                            hourlyWeather.tempC = index.tempC ?? 0
+                            hourlyWeather.tempF = index.tempF ?? 0
+                            hourlyWeather.imageURL = index.condition?.icon
+                            hourlyWeather.chanceOfRain = index.chanceOfRain ?? 0
+                            hourlyWeather.text = index.condition?.text
+                            hourlyWeather.windMph = index.windMph ?? 0
+                            hourlyWeather.windMps = index.windKph ?? 0
+                            hourlyWeather.uv = index.uv ?? 0
+                            hourlyWeather.location = location
                         }
                     }
                 }
             }
             do {
                 try contextBackground.save()
+                completion?(true)
             } catch {
                 print(error)
+                completion?(false)
             }
         }
-        completion(true)
+        
     }
     
-    // Получение данных настроек
-    var settingsData: [Settings] {
-        let fetchRequest = Settings.fetchRequest()
-        return (try? persistentContainer.viewContext.fetch(fetchRequest)) ?? []
-    }
-    
-    // Установка базовых настроек при первом запуске приложения
-    func setFirstRunSettings() {
-        if settingsData.isEmpty {
-            persistentContainer.performBackgroundTask { contextBackground in
-                let settings = Settings(context: contextBackground)
-                settings.speedFormatDescription = "Wind speed"
-                settings.temperatureFormatDescription = "Temperature"
-                settings.timeFormatDescription = "Time format"
-                settings.speedFormat = true
-                settings.temperatureFormat = true
-                settings.timeFormat = true
-                do {
-                    try settings.managedObjectContext?.save()
-                } catch {
-                    print(error)
-                }
-            }
-        }
-    }
-    
-    // Установка новых настроек
-    func setSettings(speedFormat: Bool?, temperatureFormat: Bool?, timeFormat: Bool?) {
-        if settingsData.isEmpty {
-            setFirstRunSettings()
-        } else {
-            let settings = settingsData[0]
-            if let speedFormat {
-                settings.speedFormat = speedFormat
-            }
-            if let temperatureFormat {
-                settings.temperatureFormat = temperatureFormat
-            }
-            if let timeFormat {
-                settings.timeFormat = timeFormat
-            }
-            do {
-                try settings.managedObjectContext?.save()
-            } catch {
-                print(error)
-            }
-        }
-    }
     
     // Удаление данных
+    
+    func deleteLocation(location: City) {
+        persistentContainer.viewContext.delete(location)
+        try? persistentContainer.viewContext.save()
+    }
+    
     func deleteDataByHour() {
         let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "DataByHour")
 

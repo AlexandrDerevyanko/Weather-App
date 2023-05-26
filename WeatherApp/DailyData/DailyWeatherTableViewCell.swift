@@ -7,9 +7,9 @@
 
 import UIKit
 
-class DaytimeWeatherTableViewCell: UITableViewCell {
+class DailyWeatherTableViewCell: UITableViewCell {
     
-    var data: DataByDay?
+    var data: DailyWeather?
     
     private let image: UIImageView = {
         let images = UIImageView()
@@ -20,16 +20,18 @@ class DaytimeWeatherTableViewCell: UITableViewCell {
     
     private let dateLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .black
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.textColor = .black.withAlphaComponent(0.8)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private let descriptionLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .black
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.textColor = .black.withAlphaComponent(0.8)
+        label.numberOfLines = 2
+        label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -43,16 +45,16 @@ class DaytimeWeatherTableViewCell: UITableViewCell {
     
     private let dailyChanceOfRainLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .black
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.textColor = .black.withAlphaComponent(0.8)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private let minMaxAirTemperatureLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 14)
-        label.textColor = .black
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.textColor = .black.withAlphaComponent(0.8)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -60,10 +62,18 @@ class DaytimeWeatherTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
+        backgroundColor = .systemGray5.withAlphaComponent(0.6)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func prepareForReuse() {
+        dateLabel.text = nil
+        descriptionLabel.text = nil
+        dailyChanceOfRainLabel.text = nil
+        minMaxAirTemperatureLabel.text = nil
     }
     
     private func setupUI() {
@@ -82,6 +92,7 @@ class DaytimeWeatherTableViewCell: UITableViewCell {
         }
         descriptionLabel.snp.makeConstraints { make in
             make.center.equalTo(snp.center)
+            make.width.equalTo(120)
         }
         dailyChanceOfRainImage.snp.makeConstraints { make in
             make.left.equalTo(16)
@@ -105,15 +116,22 @@ class DaytimeWeatherTableViewCell: UITableViewCell {
         if let data {
             let dateFormatter: DateFormatter = {
                 let formatter = DateFormatter()
-                formatter.locale = .init(identifier: "ru_RU")
-                formatter.dateStyle = .short
+                if timeFormat == false {
+                    formatter.locale = .init(identifier: "ru_RU")
+                }
+                formatter.dateStyle = .medium
                 formatter.timeStyle = .none
                 return formatter
             }()
             dateLabel.text = "\(dateFormatter.string(from: data.date ?? Date()))"
             descriptionLabel.text = "\(String(describing: data.text ?? ""))"
             dailyChanceOfRainLabel.text = "\(data.dailyChanceOfRain)%"
-            minMaxAirTemperatureLabel.text = "\(data.minTempC) / \(data.maxTempC)"
+            if temperatureFormat {
+                minMaxAirTemperatureLabel.text = "\(Int(data.minTempF))°F / \(Int(data.maxTempF))°F"
+            } else {
+                minMaxAirTemperatureLabel.text = "\(Int(data.minTempC))°C / \(Int(data.maxTempC))°C"
+            }
+            
         }
     }
     
