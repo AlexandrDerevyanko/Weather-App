@@ -34,7 +34,8 @@ class MainViewController: UIViewController, NSFetchedResultsControllerDelegate, 
     }
     
     private var dailyWeatherFetchResultsController: NSFetchedResultsController<DailyWeather>?
-    private var hourlyWeatherFetchResultsController: NSFetchedResultsController<HourlyWeather>?
+    private var hourlyWeatherFetchResultsController: NSFetchedResultsController<HourlyWeather>? // Для вывода данных в коллекцию начиная с текущего часа
+    private var fullHourlyWeatherFetchResultsController: NSFetchedResultsController<HourlyWeather>? // Для передачи данных в подробный прогноз по дням (DayWeatherViewCOntroller)
     private var currentWeatherFetchResultsController: NSFetchedResultsController<CurrentWeather>?
     
     private lazy var tableView: UITableView = {
@@ -66,14 +67,17 @@ class MainViewController: UIViewController, NSFetchedResultsControllerDelegate, 
     func initFetchResultsControllers() {
         let dailyWeatherFetchRequest = DailyWeather.fetchRequest()
         let hourlyWeatherFetchRequest = HourlyWeather.fetchRequest()
+        let fullHourlyWeatherFetchRequest = HourlyWeather.fetchRequest()
         let currentWeatherFetchRequest = CurrentWeather.fetchRequest()
         
         dailyWeatherFetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
         hourlyWeatherFetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
+        fullHourlyWeatherFetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
         currentWeatherFetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
         
         dailyWeatherFetchRequest.predicate = NSPredicate(format: "location == %@", location)
         hourlyWeatherFetchRequest.predicate = NSPredicate(format: "location == %@ AND date >= %@", location, Date() as CVarArg)
+        fullHourlyWeatherFetchRequest.predicate = NSPredicate(format: "location == %@", location)
         currentWeatherFetchRequest.predicate = NSPredicate(format: "location == %@", location)
 
         dailyWeatherFetchResultsController = NSFetchedResultsController(fetchRequest: dailyWeatherFetchRequest, managedObjectContext: CoreDataManager.defaultManager.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
@@ -83,6 +87,10 @@ class MainViewController: UIViewController, NSFetchedResultsControllerDelegate, 
         hourlyWeatherFetchResultsController = NSFetchedResultsController(fetchRequest: hourlyWeatherFetchRequest, managedObjectContext: CoreDataManager.defaultManager.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
         hourlyWeatherFetchResultsController?.delegate = self
         try? hourlyWeatherFetchResultsController?.performFetch()
+        
+        fullHourlyWeatherFetchResultsController = NSFetchedResultsController(fetchRequest: fullHourlyWeatherFetchRequest, managedObjectContext: CoreDataManager.defaultManager.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+        fullHourlyWeatherFetchResultsController?.delegate = self
+        try? fullHourlyWeatherFetchResultsController?.performFetch()
         
         currentWeatherFetchResultsController = NSFetchedResultsController(fetchRequest: currentWeatherFetchRequest, managedObjectContext: CoreDataManager.defaultManager.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
         currentWeatherFetchResultsController?.delegate = self
@@ -181,8 +189,7 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.section == 1 {
-            if let dailyData = dailyWeatherFetchResultsController?.fetchedObjects, let hourlyData = hourlyWeatherFetchResultsController?.fetchedObjects {
-                
+            if let dailyData = dailyWeatherFetchResultsController?.fetchedObjects, let hourlyData = fullHourlyWeatherFetchResultsController?.fetchedObjects {
                 let dailyVC = DailyPagesViewController(currentIndex: indexPath.row, dailyData: dailyData, hourlyData: hourlyData)
                 navigationController?.pushViewController(dailyVC, animated: true)
             }

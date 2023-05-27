@@ -1,9 +1,3 @@
-//
-//  DailyViewController.swift
-//  WeatherApp
-//
-//  Created by Aleksandr Derevyanko on 11.04.2023.
-//
 
 import UIKit
 import CoreData
@@ -39,27 +33,9 @@ class DayWeatherViewController: UIViewController, NSFetchedResultsControllerDele
         return tableView
     }()
 
-//    var dataByHourFetchResultsController: NSFetchedResultsController<HourlyWeather>?
-//
-//    func initFetchResultsController() {
-//        let fetchRequest = HourlyWeather.fetchRequest()
-//        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
-//        fetchRequest.predicate = NSPredicate(format: "dataByDay == %@", data[self.index])
-//        dataByHourFetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataManager.defaultManager.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
-//        dataByHourFetchResultsController?.delegate = self
-//        try? dataByHourFetchResultsController?.performFetch()
-//    }
-//
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-//        initFetchResultsController()
-//        let all = data[index].dataByHour?.allObjects as? [HourlyWeather]
-//        for i in all! {
-//            print(i.date)
-//        }
-//        print(all?[23].tempC)
-//        print(dataByHourFetchResultsController?.fetchedObjects)
         tableView.reloadData()
     }
     
@@ -107,10 +83,13 @@ extension DayWeatherViewController: UITableViewDataSource, UITableViewDelegate {
             }
             if self.index == 0 {
                 cell.data = hourlyData[0]
+                print(hourlyData[0].date)
             } else if self.index == 1 {
                 cell.data = hourlyData[2]
+                print(hourlyData[2].date)
             } else if self.index == 2 {
                 cell.data = hourlyData[4]
+                print(hourlyData[4].date)
             }
             cell.dateLabel.text = "Day"
             cell.setup()
@@ -122,10 +101,13 @@ extension DayWeatherViewController: UITableViewDataSource, UITableViewDelegate {
             }
             if self.index == 0 {
                 cell.data = hourlyData[1]
+                print(hourlyData[1].date)
             } else if self.index == 1 {
                 cell.data = hourlyData[3]
+                print(hourlyData[3].date)
             } else if self.index == 2 {
                 cell.data = hourlyData[5]
+                print(hourlyData[5].date)
             }
             cell.dateLabel.text = "Night"
             cell.setup()
