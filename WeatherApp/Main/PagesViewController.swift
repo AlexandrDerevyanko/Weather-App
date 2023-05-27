@@ -5,6 +5,7 @@ import CoreLocation
 
 class PagesViewController: UIPageViewController, UIPageViewControllerDataSource, NSFetchedResultsControllerDelegate {
     
+    static let notificationName = Notification.Name("reloadView")
     private var pageController: UIPageViewController?
     var currentIndex: Int = 0
     private var locationFetchResultsController: NSFetchedResultsController<City>?
@@ -30,6 +31,7 @@ class PagesViewController: UIPageViewController, UIPageViewControllerDataSource,
         locationManager.delegate = self
         locationManager.requestAlwaysAuthorization()
         locationManager.requestLocation()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -121,10 +123,8 @@ class PagesViewController: UIPageViewController, UIPageViewControllerDataSource,
     
     @objc
     private func settingsButtonPressed() {
-        if let locations {
-            let settingsVC = SettingsViewController(locations: locations)
-            navigationController?.pushViewController(settingsVC, animated: true)
-        } 
+        let settingsVC = SettingsViewController()
+        navigationController?.pushViewController(settingsVC, animated: true)
     }
     
     @objc
@@ -142,6 +142,13 @@ class PagesViewController: UIPageViewController, UIPageViewControllerDataSource,
         } else {
             AlertPicker.defaulPicker.errors(showIn: self, error: .unexpected)
         }
+    }
+    
+    @objc private func reloadView() {
+        let vc = PagesViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
+        vc.initFetchResultsControllers()
+        vc.currentIndex = 0
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {

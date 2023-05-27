@@ -26,13 +26,12 @@ var tempFormat: String {
 struct WeatherHistory: View {
     
     func formatDate(_ date: Date) -> String {
-//        let cal = Calendar.current
-//        let dateComponents = cal.dateComponents ( [.hour, .minute], from: date)
-//        guard let hour = dateComponents.hour, let minute = dateComponents.minute else { return "" }
         let dateFormatter: DateFormatter = {
             let formatter = DateFormatter()
             if timeFormat == false {
                 formatter.locale = .init(identifier: "ru_RU")
+            } else {
+                formatter.locale = .init(identifier: "en_US")
             }
             formatter.dateStyle = .none
             formatter.timeStyle = .short

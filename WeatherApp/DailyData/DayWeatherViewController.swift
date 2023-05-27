@@ -11,11 +11,13 @@ import CoreData
 class DayWeatherViewController: UIViewController, NSFetchedResultsControllerDelegate {
     
     var index: Int
-    var data: [DailyWeather]
+    var dailyData: [DailyWeather]
+    var hourlyData: [HourlyWeather]
     var delegate: DayWeatherViewDelegate?
-    init(index: Int, data: [DailyWeather]) {
+    init(index: Int, dailyData: [DailyWeather], hourlyData: [HourlyWeather]) {
         self.index = index
-        self.data = data
+        self.dailyData = dailyData
+        self.hourlyData = hourlyData
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -37,21 +39,27 @@ class DayWeatherViewController: UIViewController, NSFetchedResultsControllerDele
         return tableView
     }()
 
-    var dataByHourFetchResultsController: NSFetchedResultsController<HourlyWeather>?
-
-    func initFetchResultsController() {
-        let fetchRequest = HourlyWeather.fetchRequest()
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
-        fetchRequest.predicate = NSPredicate(format: "dataByDay == %@", data[self.index])
-        dataByHourFetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataManager.defaultManager.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
-        dataByHourFetchResultsController?.delegate = self
-        try? dataByHourFetchResultsController?.performFetch()
-    }
-    
+//    var dataByHourFetchResultsController: NSFetchedResultsController<HourlyWeather>?
+//
+//    func initFetchResultsController() {
+//        let fetchRequest = HourlyWeather.fetchRequest()
+//        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
+//        fetchRequest.predicate = NSPredicate(format: "dataByDay == %@", data[self.index])
+//        dataByHourFetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataManager.defaultManager.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+//        dataByHourFetchResultsController?.delegate = self
+//        try? dataByHourFetchResultsController?.performFetch()
+//    }
+//
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        initFetchResultsController()
+//        initFetchResultsController()
+//        let all = data[index].dataByHour?.allObjects as? [HourlyWeather]
+//        for i in all! {
+//            print(i.date)
+//        }
+//        print(all?[23].tempC)
+//        print(dataByHourFetchResultsController?.fetchedObjects)
         tableView.reloadData()
     }
     
@@ -61,13 +69,15 @@ class DayWeatherViewController: UIViewController, NSFetchedResultsControllerDele
             let formatter = DateFormatter()
             if timeFormat == false {
                 formatter.locale = .init(identifier: "ru_RU")
+            } else {
+                formatter.locale = .init(identifier: "en_US")
             }
-            formatter.dateStyle = .medium
+            formatter.dateStyle = .short
             formatter.timeStyle = .none
             return formatter
         }()
         
-        delegate?.changeTitle(title: "\(dateFormatter.string(from: data[index].date ?? Date()))")
+        delegate?.changeTitle(title: "\(dateFormatter.string(from: dailyData[index].date ?? Date()))")
     }
     
     private func setupUI() {
@@ -95,8 +105,13 @@ extension DayWeatherViewController: UITableViewDataSource, UITableViewDelegate {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "DayCell", for: indexPath) as? DayWeatherTableViewCell else {
                 preconditionFailure("Error")
             }
-            
-            cell.data = dataByHourFetchResultsController?.fetchedObjects?[12]
+            if self.index == 0 {
+                cell.data = hourlyData[0]
+            } else if self.index == 1 {
+                cell.data = hourlyData[2]
+            } else if self.index == 2 {
+                cell.data = hourlyData[4]
+            }
             cell.dateLabel.text = "Day"
             cell.setup()
             return cell
@@ -105,8 +120,13 @@ extension DayWeatherViewController: UITableViewDataSource, UITableViewDelegate {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "DayCell", for: indexPath) as? DayWeatherTableViewCell else {
                 preconditionFailure("Error")
             }
-            
-            cell.data = dataByHourFetchResultsController?.fetchedObjects?[23]
+            if self.index == 0 {
+                cell.data = hourlyData[1]
+            } else if self.index == 1 {
+                cell.data = hourlyData[3]
+            } else if self.index == 2 {
+                cell.data = hourlyData[5]
+            }
             cell.dateLabel.text = "Night"
             cell.setup()
             return cell
@@ -115,7 +135,7 @@ extension DayWeatherViewController: UITableViewDataSource, UITableViewDelegate {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "SunAndMoonCell", for: indexPath) as? SunAndMoonTableViewCell else {
                 preconditionFailure("Error")
             }
-            cell.data = self.data[self.index]
+            cell.data = self.dailyData[self.index]
             cell.setup()
             return cell
         }

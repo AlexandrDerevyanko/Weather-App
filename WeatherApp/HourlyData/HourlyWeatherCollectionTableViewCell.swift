@@ -26,7 +26,6 @@ class HourlyWeatherCollectionTableViewCell: UITableViewCell, NSFetchedResultsCon
         collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "DefaultCell")
         collectionView.delegate = self
         collectionView.dataSource = self
-//        collectionView.layer.cornerRadius = 15
         collectionView.layer.masksToBounds = true
         collectionView.backgroundColor = standardBackgroundColor
         collectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -37,6 +36,7 @@ class HourlyWeatherCollectionTableViewCell: UITableViewCell, NSFetchedResultsCon
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
         collectionView.reloadData()
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadData), name: MainViewController.notificationName, object: nil)
     }
     
     required init?(coder: NSCoder) {
@@ -56,6 +56,10 @@ class HourlyWeatherCollectionTableViewCell: UITableViewCell, NSFetchedResultsCon
             make.top.equalTo(snp.top)
             make.bottom.equalTo(snp.bottom)
         }
+    }
+    
+    @objc private func reloadData() {
+        collectionView.reloadData()
     }
     
 }

@@ -100,11 +100,13 @@ class SettingsTableViewCell: UITableViewCell {
                 UserDefaults.standard.set(false, forKey: title)
                 trueButton.backgroundColor = .systemGray2.withAlphaComponent(0.8)
                 falseButton.backgroundColor = standardBackgroundColor
+                NotificationCenter.default.post(name: MainViewController.notificationName, object: nil)
             } else if title == "Time format" {
                 UserDefaults.standard.set(false, forKey: title)
                 UserDefaults.standard.synchronize()
                 trueButton.backgroundColor = .systemGray2.withAlphaComponent(0.8)
                 falseButton.backgroundColor = standardBackgroundColor
+                NotificationCenter.default.post(name: MainViewController.notificationName, object: nil)
             }
         }
     }
@@ -117,10 +119,12 @@ class SettingsTableViewCell: UITableViewCell {
                 UserDefaults.standard.synchronize()
                 trueButton.backgroundColor = standardBackgroundColor
                 falseButton.backgroundColor = .systemGray2.withAlphaComponent(0.8)
+                NotificationCenter.default.post(name: MainViewController.notificationName, object: nil)
             } else if title == "Time format" {
                 UserDefaults.standard.set(true, forKey: title)
                 trueButton.backgroundColor = standardBackgroundColor
                 falseButton.backgroundColor = .systemGray2.withAlphaComponent(0.8)
+                NotificationCenter.default.post(name: MainViewController.notificationName, object: nil)
             }
         }
     }

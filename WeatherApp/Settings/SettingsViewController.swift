@@ -6,19 +6,18 @@
 //
 
 import UIKit
+import CoreData
 
-class SettingsViewController: UIViewController {
-    
-    var locations: [City]
-    
-    init(locations: [City]) {
-        self.locations = locations
-        super.init(nibName: nil, bundle: nil)
+class SettingsViewController: UIViewController, NSFetchedResultsControllerDelegate {
+        
+    var locations: [City] {
+        initCityFetchResultsController()
+        return cityFetchResultsController?.fetchedObjects ?? []
     }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    private var cityFetchResultsController: NSFetchedResultsController<City>?
+    private var dailyWeatherFetchResultsController: NSFetchedResultsController<DailyWeather>?
+    private var hourlyWeatherFetchResultsController: NSFetchedResultsController<HourlyWeather>?
+    private var currentWeatherFetchResultsController: NSFetchedResultsController<CurrentWeather>?
     
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
@@ -37,6 +36,7 @@ class SettingsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        initCityFetchResultsController()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -49,6 +49,11 @@ class SettingsViewController: UIViewController {
         navigationController?.navigationBar.compactAppearance = appearance
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
         tableView.reloadData()
+    }
+    
+    @objc private func backButtonPressed() {
+        let pagesVC = PagesViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
+        navigationController?.pushViewController(pagesVC, animated: true)
     }
     
     private func setupUI() {
@@ -65,7 +70,63 @@ class SettingsViewController: UIViewController {
             make.bottom.equalTo(-100)
         }
     }
+    
+    func initCityFetchResultsController() {
+        let cityFetchRequest = City.fetchRequest()
+        
+        cityFetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: false)]
+        
+        cityFetchResultsController = NSFetchedResultsController(fetchRequest: cityFetchRequest, managedObjectContext: CoreDataManager.defaultManager.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+        cityFetchResultsController?.delegate = self
+        do {
+            try cityFetchResultsController?.performFetch()
+        } catch {
+            print(error)
+        }
+    }
+    
+    func initFetchResultsControllers(location: City, completion: ((_ success: Bool) -> ())?) {
+        let dailyWeatherFetchRequest = DailyWeather.fetchRequest()
+        let hourlyWeatherFetchRequest = HourlyWeather.fetchRequest()
+        let currentWeatherFetchRequest = CurrentWeather.fetchRequest()
+        
+        dailyWeatherFetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
+        hourlyWeatherFetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
+        currentWeatherFetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
+        
+        dailyWeatherFetchRequest.predicate = NSPredicate(format: "location == %@", location)
+        hourlyWeatherFetchRequest.predicate = NSPredicate(format: "location == %@", location)
+        currentWeatherFetchRequest.predicate = NSPredicate(format: "location == %@", location)
 
+        dailyWeatherFetchResultsController = NSFetchedResultsController(fetchRequest: dailyWeatherFetchRequest, managedObjectContext: CoreDataManager.defaultManager.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+        dailyWeatherFetchResultsController?.delegate = self
+        try? dailyWeatherFetchResultsController?.performFetch()
+        
+        hourlyWeatherFetchResultsController = NSFetchedResultsController(fetchRequest: hourlyWeatherFetchRequest, managedObjectContext: CoreDataManager.defaultManager.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+        hourlyWeatherFetchResultsController?.delegate = self
+        try? hourlyWeatherFetchResultsController?.performFetch()
+        
+        currentWeatherFetchResultsController = NSFetchedResultsController(fetchRequest: currentWeatherFetchRequest, managedObjectContext: CoreDataManager.defaultManager.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+        currentWeatherFetchResultsController?.delegate = self
+        try? currentWeatherFetchResultsController?.performFetch()
+        
+        do {
+            try dailyWeatherFetchResultsController?.performFetch()
+            try hourlyWeatherFetchResultsController?.performFetch()
+            try currentWeatherFetchResultsController?.performFetch()
+            completion?(true)
+        } catch {
+            print(error)
+            completion?(false)
+        }
+    }
+
+    private func updateView() {
+        let backButton = UIBarButtonItem(title: "Back", style: .plain, target: self, action: #selector(backButtonPressed))
+        backButton.tintColor = .white.withAlphaComponent(0.8)
+        navigationItem.hidesBackButton = true
+        navigationItem.leftBarButtonItem = backButton
+    }
 }
 
 extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
@@ -124,10 +185,16 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if indexPath.section == 1 {
             if editingStyle == .delete {
-                print(indexPath)
                 let location = locations[indexPath.row]
-                CoreDataManager.defaultManager.deleteLocation(location: location)
-                tableView.deleteRows(at: [IndexPath(row: indexPath.row, section: 1)], with: .fade)
+                initFetchResultsControllers(location: location) { [self] success in
+                    if success {
+                        guard let dailyWeather = dailyWeatherFetchResultsController?.fetchedObjects, let hourlyWeather = hourlyWeatherFetchResultsController?.fetchedObjects, let currentWeather = currentWeatherFetchResultsController?.fetchedObjects else { return }
+                        CoreDataManager.defaultManager.deleteData(location: location, dailyWeather: dailyWeather, hourlyWeather: hourlyWeather, currentWeather: currentWeather[0])
+                        tableView.deleteRows(at: [IndexPath(row: indexPath.row, section: 1)], with: .fade)
+                        updateView()
+                    }
+                }
+                
             }
         }
         

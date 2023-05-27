@@ -117,6 +117,7 @@ class DayWeatherTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
+        print(data?.date)
     }
     
     required init?(coder: NSCoder) {

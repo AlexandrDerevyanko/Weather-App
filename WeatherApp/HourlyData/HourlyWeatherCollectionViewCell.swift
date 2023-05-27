@@ -82,6 +82,8 @@ class HourlyWeatherCollectionViewCell: UICollectionViewCell {
                 let formatter = DateFormatter()
                 if timeFormat == false {
                     formatter.locale = .init(identifier: "ru_RU")
+                } else {
+                    formatter.locale = .init(identifier: "en_US")
                 }
                 formatter.dateStyle = .none
                 formatter.timeStyle = .short

@@ -26,11 +26,11 @@ class CoreDataManager {
         return container
     }()
     
-//    // Получение массива локаций
-//    var locationArray: [City] {
-//        let fetchRequest = City.fetchRequest()
-//        return (try? persistentContainer.viewContext.fetch(fetchRequest)) ?? []
-//    }
+    // Получение массива локаций
+    var locationArray: [City] {
+        let fetchRequest = City.fetchRequest()
+        return (try? persistentContainer.viewContext.fetch(fetchRequest)) ?? []
+    }
     
     // Получение локации по названию
     func getLocation(name: String, context: NSManagedObjectContext) -> City? {
@@ -42,6 +42,12 @@ class CoreDataManager {
     // Получение сущности DataByDay по дате
     func getDataByDay(dateString: String, context: NSManagedObjectContext) -> DailyWeather? {
         let fetchRequest = DailyWeather.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "dateString == %@", dateString)
+        return (try? context.fetch(fetchRequest))?.first
+    }
+    
+    func getDataByHour(dateString: String, context: NSManagedObjectContext) -> HourlyWeather? {
+        let fetchRequest = HourlyWeather.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "dateString == %@", dateString)
         return (try? context.fetch(fetchRequest))?.first
     }
@@ -156,6 +162,18 @@ class CoreDataManager {
     
     
     // Удаление данных
+    
+    func deleteData(location: City, dailyWeather: [DailyWeather], hourlyWeather: [HourlyWeather], currentWeather: CurrentWeather) {
+        persistentContainer.viewContext.delete(location)
+        for i in dailyWeather {
+            persistentContainer.viewContext.delete(i)
+        }
+        for i in hourlyWeather {
+            persistentContainer.viewContext.delete(i)
+        }
+        persistentContainer.viewContext.delete(currentWeather)
+        try? persistentContainer.viewContext.save()
+    }
     
     func deleteLocation(location: City) {
         persistentContainer.viewContext.delete(location)

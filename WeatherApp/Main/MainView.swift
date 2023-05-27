@@ -260,8 +260,10 @@ class MainView: UIView {
                 let formatter = DateFormatter()
                 if timeFormat == false {
                     formatter.locale = .init(identifier: "ru_RU")
+                } else {
+                    formatter.locale = .init(identifier: "en_US")
                 }
-                formatter.dateStyle = .long
+                formatter.dateStyle = .short
                 formatter.timeStyle = .short
                 return formatter
             }()

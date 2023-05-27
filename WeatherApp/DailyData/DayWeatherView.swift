@@ -1,8 +1,14 @@
+//
+//  DayWeatherView.swift
+//  WeatherApp
+//
+//  Created by Aleksandr Derevyanko on 27.05.2023.
+//
 
 import UIKit
 import SwiftUI
 
-class HourlyWeatherView: UIView {
+class DayWeatherView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -25,7 +31,6 @@ class HourlyWeatherView: UIView {
             make.right.equalTo(-10)
             make.top.equalTo(20)
             make.bottom.equalTo(-20)
-//            make.height.equalTo(170)
         }
     }
     

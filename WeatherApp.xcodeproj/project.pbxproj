@@ -29,6 +29,7 @@
 		FF71E6242A1FF41500E9DABA /* LocationsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF71E6232A1FF41500E9DABA /* LocationsTableViewCell.swift */; };
 		FF793CFA29EEBD9E0081E858 /* DailyWeatherTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF793CF929EEBD9E0081E858 /* DailyWeatherTableViewCell.swift */; };
 		FF793CFC29F287890081E858 /* WeatherJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF793CFB29F287890081E858 /* WeatherJSON.swift */; };
+		FF82500F2A2161F20035EC71 /* DayWeatherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF82500E2A2161F20035EC71 /* DayWeatherView.swift */; };
 		FFFF234329E531070036F8EC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFFF234229E531070036F8EC /* AppDelegate.swift */; };
 		FFFF234529E531070036F8EC /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFFF234429E531070036F8EC /* SceneDelegate.swift */; };
 		FFFF234729E531070036F8EC /* AllowDeviceLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFFF234629E531070036F8EC /* AllowDeviceLocationViewController.swift */; };
@@ -69,6 +70,7 @@
 		FF71E6232A1FF41500E9DABA /* LocationsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationsTableViewCell.swift; sourceTree = "<group>"; };
 		FF793CF929EEBD9E0081E858 /* DailyWeatherTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyWeatherTableViewCell.swift; sourceTree = "<group>"; };
 		FF793CFB29F287890081E858 /* WeatherJSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherJSON.swift; sourceTree = "<group>"; };
+		FF82500E2A2161F20035EC71 /* DayWeatherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayWeatherView.swift; sourceTree = "<group>"; };
 		FFFF233F29E531070036F8EC /* WeatherApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WeatherApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FFFF234229E531070036F8EC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FFFF234429E531070036F8EC /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -135,6 +137,7 @@
 				FF71E61F2A1FE5DE00E9DABA /* DailyPagesViewController.swift */,
 				FFFF236729E5436B0036F8EC /* DayWeatherViewController.swift */,
 				FF71E6212A1FF0BA00E9DABA /* DayWeatherViewDelegate.swift */,
+				FF82500E2A2161F20035EC71 /* DayWeatherView.swift */,
 				FF6865692A01408F000916BE /* DayWeatherTableViewCell.swift */,
 				FF68656B2A025104000916BE /* SunAndMoonTableViewCell.swift */,
 				FF793CF929EEBD9E0081E858 /* DailyWeatherTableViewCell.swift */,
@@ -315,6 +318,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FF82500F2A2161F20035EC71 /* DayWeatherView.swift in Sources */,
 				FF71E5EC2A1B942200E9DABA /* Geocoder.swift in Sources */,
 				FF71E5F02A1CB94800E9DABA /* AlertPicker.swift in Sources */,
 				FFFF234D29E531070036F8EC /* WeatherApp.xcdatamodeld in Sources */,

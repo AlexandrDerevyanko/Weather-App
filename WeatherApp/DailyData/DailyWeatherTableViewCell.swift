@@ -118,8 +118,10 @@ class DailyWeatherTableViewCell: UITableViewCell {
                 let formatter = DateFormatter()
                 if timeFormat == false {
                     formatter.locale = .init(identifier: "ru_RU")
+                } else {
+                    formatter.locale = .init(identifier: "en_US")
                 }
-                formatter.dateStyle = .medium
+                formatter.dateStyle = .short
                 formatter.timeStyle = .none
                 return formatter
             }()
