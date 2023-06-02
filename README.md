@@ -1,0 +1,8 @@
+![](https://github.com/AlexandrDerevyanko/Weather-App/ScreenShots/1.png)
+![](https://github.com/AlexandrDerevyanko/Weather-App/ScreenShots/1.png)
+![](https://github.com/AlexandrDerevyanko/Weather-App/ScreenShots/1.png)
+![](https://github.com/AlexandrDerevyanko/Weather-App/ScreenShots/1.png)
+![](https://github.com/AlexandrDerevyanko/Weather-App/ScreenShots/1.png)
+![](https://github.com/AlexandrDerevyanko/Weather-App/ScreenShots/1.png)
+![](https://github.com/AlexandrDerevyanko/Weather-App/ScreenShots/1.png)
+![](https://github.com/AlexandrDerevyanko/Weather-App/ScreenShots/1.png)
