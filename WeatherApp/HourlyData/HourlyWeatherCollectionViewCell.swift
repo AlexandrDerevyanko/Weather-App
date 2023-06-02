@@ -1,9 +1,3 @@
-//
-//  WeatherCollectionViewCell.swift
-//  WeatherApp
-//
-//  Created by Aleksandr Derevyanko on 24.04.2023.
-//
 
 import UIKit
 

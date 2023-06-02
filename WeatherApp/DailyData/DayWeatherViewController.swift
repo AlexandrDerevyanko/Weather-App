@@ -83,13 +83,10 @@ extension DayWeatherViewController: UITableViewDataSource, UITableViewDelegate {
             }
             if self.index == 0 {
                 cell.data = hourlyData[0]
-                print(hourlyData[0].date)
             } else if self.index == 1 {
                 cell.data = hourlyData[2]
-                print(hourlyData[2].date)
             } else if self.index == 2 {
                 cell.data = hourlyData[4]
-                print(hourlyData[4].date)
             }
             cell.dateLabel.text = "Day"
             cell.setup()
@@ -101,13 +98,10 @@ extension DayWeatherViewController: UITableViewDataSource, UITableViewDelegate {
             }
             if self.index == 0 {
                 cell.data = hourlyData[1]
-                print(hourlyData[1].date)
             } else if self.index == 1 {
                 cell.data = hourlyData[3]
-                print(hourlyData[3].date)
             } else if self.index == 2 {
                 cell.data = hourlyData[5]
-                print(hourlyData[5].date)
             }
             cell.dateLabel.text = "Night"
             cell.setup()

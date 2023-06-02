@@ -1,9 +1,3 @@
-//
-//  HourlyDataCell.swift
-//  WeatherApp
-//
-//  Created by Aleksandr Derevyanko on 02.05.2023.
-//
 
 import UIKit
 
@@ -233,7 +227,7 @@ class HourlyWeatherTableViewCell: UITableViewCell {
                 }
             }
             descriptionLabel.text = "\(String(describing: data.text ?? ""))"
-            windSpeedValueLabel.text = "\(data.windMps) m/s"
+            windSpeedValueLabel.text = "\(Int(data.windMps)) m/s"
             dailyChanceOfRainValueLabel.text = "\(data.chanceOfRain)%"
             uvValueLabel.text = "\(data.uv)"
         }

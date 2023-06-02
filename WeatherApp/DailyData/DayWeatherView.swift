@@ -1,9 +1,3 @@
-//
-//  DayWeatherView.swift
-//  WeatherApp
-//
-//  Created by Aleksandr Derevyanko on 27.05.2023.
-//
 
 import UIKit
 import SwiftUI

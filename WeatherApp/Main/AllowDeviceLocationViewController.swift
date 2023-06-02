@@ -1,9 +1,3 @@
-//
-//  ViewController.swift
-//  WeatherApp
-//
-//  Created by Aleksandr Derevyanko on 11.04.2023.
-//
 
 import UIKit
 import CoreLocation
@@ -68,12 +62,9 @@ class AllowDeviceLocationViewController: UIViewController, NSFetchedResultsContr
         locationManager.delegate = self
         initFetchResultsController()
         if locations != nil, locations?.count != 0 {
-            locationManager.requestAlwaysAuthorization()
-            locationManager.requestLocation()
-            if let latitude, let longitude {
-                checkLocation(lat: latitude, lon: longitude)
-            }
-            
+//            locationManager.requestAlwaysAuthorization()
+//            locationManager.requestLocation()
+            checkLocation(lat: latitude, lon: longitude)
         }
     }
 
@@ -130,7 +121,7 @@ class AllowDeviceLocationViewController: UIViewController, NSFetchedResultsContr
         try? locationFetchResultsController?.performFetch()
     }
     
-    private func checkLocation(lat: Double, lon: Double) {
+    private func checkLocation(lat: Double?, lon: Double?) {
         let mainVC = PagesViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
         mainVC.latitude = lat
         mainVC.longitude = lon
@@ -142,7 +133,6 @@ class AllowDeviceLocationViewController: UIViewController, NSFetchedResultsContr
         locationManager.requestAlwaysAuthorization()
         locationManager.requestLocation()
         locationManager.startUpdatingLocation()
-        
     }
     
     @objc
@@ -187,9 +177,9 @@ extension AllowDeviceLocationViewController: CLLocationManagerDelegate {
         case .authorizedAlways, .authorizedWhenInUse:
             manager.requestLocation()
         case .denied, .restricted:
-            print("Определение локации невозможно")
+            print("Location cannot be determined")
         case .notDetermined:
-            print("Определение локации не запрошено")
+            print("Location not requested")
         @unknown default:
             fatalError()
         }
@@ -206,7 +196,7 @@ extension AllowDeviceLocationViewController: CLLocationManagerDelegate {
         _ manager: CLLocationManager,
         didFailWithError error: Error
     ) {
-        // Handle failure to get a user’s location
+        
     }
     
 }

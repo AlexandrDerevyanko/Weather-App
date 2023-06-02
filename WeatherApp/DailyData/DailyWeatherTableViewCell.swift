@@ -1,9 +1,3 @@
-//
-//  DaytimeWeatherTableViewCell.swift
-//  WeatherApp
-//
-//  Created by Aleksandr Derevyanko on 18.04.2023.
-//
 
 import UIKit
 

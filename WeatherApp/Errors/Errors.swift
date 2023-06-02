@@ -1,26 +1,23 @@
-//
-//  Errors.swift
-//  WeatherApp
-//
-//  Created by Aleksandr Derevyanko on 17.04.2023.
-//
 
 import Foundation
 
 enum Errors: Error {
     case empty
     case unexpected
+    case singleLocation
 }
 
 extension Errors: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .empty:
-            return NSLocalizedString("Похоже, вы оставили пустое поле",
+            return NSLocalizedString("It looks like you left an empty field",
                                      comment: "")
         case .unexpected:
-            return NSLocalizedString("Что то пошло не так",
+            return NSLocalizedString("Something went wrong",
                                      comment: "")
+        case .singleLocation:
+            return NSLocalizedString("Unable to delete a single location", comment: "")
         }
     }
 }

@@ -1,9 +1,3 @@
-//
-//  File.swift
-//  WeatherApp
-//
-//  Created by Aleksandr Derevyanko on 11.04.2023.
-//
 
 import UIKit
 import CoreData
@@ -185,6 +179,10 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if indexPath.section == 1 {
             if editingStyle == .delete {
+                if locations.count == 1 {
+                    AlertPicker.defaulPicker.errors(showIn: self, error: .singleLocation)
+                    return
+                }
                 let location = locations[indexPath.row]
                 initFetchResultsControllers(location: location) { [self] success in
                     if success {
@@ -208,6 +206,5 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
             navigationController?.pushViewController(pagesVC, animated: true)
         }
     }
-    
     
 }

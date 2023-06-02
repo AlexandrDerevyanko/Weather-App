@@ -1,9 +1,3 @@
-//
-//  WeatherHistory.swift
-//  WeatherApp
-//
-//  Created by Aleksandr Derevyanko on 24.05.2023.
-//
 
 import Foundation
 import Charts
@@ -54,13 +48,7 @@ struct WeatherHistory: View {
             .foregroundStyle(.white)
             .symbolSize(10)
         }
-//        .chartXAxis {
-//            AxisMarks(values: .stride(by: .hour))
-//        }
         .chartYAxisLabel("\(tempFormat)")
         .background(Color(.clear))
-//        .frame(
-//        height: 150
-//        )
     }
 }

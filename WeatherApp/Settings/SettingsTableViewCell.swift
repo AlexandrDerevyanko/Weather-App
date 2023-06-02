@@ -1,9 +1,3 @@
-//
-//  SettingsTableViewCell.swift
-//  WeatherApp
-//
-//  Created by Aleksandr Derevyanko on 26.04.2023.
-//
 
 import UIKit
 

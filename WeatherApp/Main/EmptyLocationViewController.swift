@@ -1,9 +1,3 @@
-//
-//  EmptyLocationViewController.swift
-//  WeatherApp
-//
-//  Created by Aleksandr Derevyanko on 16.05.2023.
-//
 
 import UIKit
 
@@ -30,14 +24,24 @@ class EmptyLocationViewController: UIViewController {
     
     @objc
     private func buttonPressed() {
-        TextPicker.defaultPicker.getText(showPickerIn: self, title: "Adding a new location", message: "Please enter city name") { text in
+        TextPicker.defaultPicker.getText(showPickerIn: self, title: "Adding a new location", message: "Please enter city name") { text, error in
+            if let error {
+                AlertPicker.defaulPicker.errors(showIn: self, error: error)
+                return
+            }
+            guard let text else { return }
             DownloadManager.defaultManager.downloadWeatherDataFromString(location: text) { weatherData, error in
+                if let error {
+                    DispatchQueue.main.async {
+                        AlertPicker.defaulPicker.errors(showIn: self, error: error)
+                        return
+                    }
+                }
                 guard let weatherData else { return }
                 CoreDataManager.defaultManager.addData(data: weatherData as! Weather) { success in
                     if success {
                         DispatchQueue.main.async {
-                            let pagesVC = PagesViewController()
-                            pagesVC.initFetchResultsControllers()
+                            let pagesVC = PagesViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
                             self.navigationController?.pushViewController(pagesVC, animated: true)
                         }
                     }

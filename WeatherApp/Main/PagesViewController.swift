@@ -1,7 +1,6 @@
 
 import UIKit
 import CoreData
-import CoreLocation
 
 class PagesViewController: UIPageViewController, UIPageViewControllerDataSource, NSFetchedResultsControllerDelegate {
     
@@ -12,10 +11,7 @@ class PagesViewController: UIPageViewController, UIPageViewControllerDataSource,
     private var locations: [City]? {
         return locationFetchResultsController?.fetchedObjects
     }
-    private lazy var locationManager: CLLocationManager = {
-        let locationManager = CLLocationManager()
-        return locationManager
-    }()
+
     var latitude: Double?
     var longitude: Double?
 
@@ -28,10 +24,6 @@ class PagesViewController: UIPageViewController, UIPageViewControllerDataSource,
         mainVC.delegate = self
         setViewControllers([mainVC], direction: .forward, animated: false)
         self.dataSource = self
-        locationManager.delegate = self
-        locationManager.requestAlwaysAuthorization()
-        locationManager.requestLocation()
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -65,23 +57,25 @@ class PagesViewController: UIPageViewController, UIPageViewControllerDataSource,
     }
     
     // Функция добавления и показа новой локации
-    static func addAndShowLocation(in viewController: UIViewController, with location: String) {
+    func addAndShowLocation(in viewController: UIViewController, with location: String) {
         DownloadManager.defaultManager.downloadWeatherDataFromString(location: location) { weatherData, error in
-            guard let weatherData else { return }
-            print(weatherData)
             if let error {
-                print(error)
-                return
+                DispatchQueue.main.async {
+                    AlertPicker.defaulPicker.errors(showIn: self, error: error)
+                    return
+                }
             }
+            guard let weatherData else { return }
             let data = weatherData as? Weather
             if let data {
                 CoreDataManager.defaultManager.addData(data: data) { success in
                     if success {
                         DispatchQueue.main.async {
-                            let vc = PagesViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
-                            vc.initFetchResultsControllers()
-                            vc.currentIndex = 0
-                            viewController.navigationController?.pushViewController(vc, animated: true)
+                            let pagesVC = PagesViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
+                            pagesVC.currentIndex = 0
+                            pagesVC.latitude = self.latitude
+                            pagesVC.longitude = self.longitude
+                            viewController.navigationController?.pushViewController(pagesVC, animated: true)
                         }
                     }
                 }
@@ -103,17 +97,19 @@ class PagesViewController: UIPageViewController, UIPageViewControllerDataSource,
                 DispatchQueue.main.async {
                     let pagesVC = PagesViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
                     pagesVC.currentIndex = index
-                    
+                    pagesVC.latitude = self.latitude
+                    pagesVC.longitude = self.longitude
                     self.navigationController?.pushViewController(pagesVC, animated: true)
                 }
             } else {
                 CoreDataManager.defaultManager.addData(data: data) { success in
                     if success {
                         DispatchQueue.main.async {
-                            let vc = PagesViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
-                            vc.initFetchResultsControllers()
-                            vc.currentIndex = 0
-                            self.navigationController?.pushViewController(vc, animated: true)
+                            let pagesVC = PagesViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
+                            pagesVC.currentIndex = 0
+                            pagesVC.latitude = self.latitude
+                            pagesVC.longitude = self.longitude
+                            self.navigationController?.pushViewController(pagesVC, animated: true)
                         }
                     }
                 }
@@ -129,8 +125,13 @@ class PagesViewController: UIPageViewController, UIPageViewControllerDataSource,
     
     @objc
     private func addLocationButtonPressed() {
-        TextPicker.defaultPicker.getText(showPickerIn: self, title: "Adding a new location", message: "Please enter city name") { text in
-            PagesViewController.addAndShowLocation(in: self, with: text)
+        TextPicker.defaultPicker.getText(showPickerIn: self, title: "Adding a new location", message: "Please enter city name") { text, error in
+            if let error {
+                AlertPicker.defaulPicker.errors(showIn: self, error: error)
+                return
+            }
+            guard let text else { return }
+            self.addAndShowLocation(in: self, with: text)
         }
     }
     
@@ -141,6 +142,7 @@ class PagesViewController: UIPageViewController, UIPageViewControllerDataSource,
             determinationAndShowLocation(lat: latitude, lon: longitude)
         } else {
             AlertPicker.defaulPicker.errors(showIn: self, error: .unexpected)
+            return
         }
     }
     
@@ -181,24 +183,6 @@ class PagesViewController: UIPageViewController, UIPageViewControllerDataSource,
         return self.currentIndex
     }
 
-}
-
-extension PagesViewController: CLLocationManagerDelegate {
-    func locationManager(
-        _ manager: CLLocationManager,
-        didUpdateLocations locations: [CLLocation]
-    ) {
-        latitude = self.locationManager.location?.coordinate.latitude
-        longitude = self.locationManager.location?.coordinate.longitude
-    }
-    
-    func locationManager(
-        _ manager: CLLocationManager,
-        didFailWithError error: Error
-    ) {
-        // Handle failure to get a user’s location
-    }
-    
 }
 
 extension PagesViewController: PagesViewDelegate {

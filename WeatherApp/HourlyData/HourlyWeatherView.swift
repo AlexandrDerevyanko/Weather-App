@@ -25,7 +25,6 @@ class HourlyWeatherView: UIView {
             make.right.equalTo(-10)
             make.top.equalTo(20)
             make.bottom.equalTo(-20)
-//            make.height.equalTo(170)
         }
     }
     

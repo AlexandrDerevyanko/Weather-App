@@ -1,22 +1,11 @@
-//
-//  DownloadManager.swift
-//  WeatherApp
-//
-//  Created by Aleksandr Derevyanko on 11.04.2023.
-//
 
 import Foundation
-
-
-// https://api.met.no/weatherapi/locationforecast/2.0/complete?lat=-16.516667&lon=-68.166667&altitude=4150
-
-
 
 class DownloadManager {
     
     static let defaultManager = DownloadManager()
     
-    func downloadWeatherDataFromCoordinates(lat: String, lon: String, completion: ((_ weatherData: Any?, _ error: Error?) -> ())?) {
+    func downloadWeatherDataFromCoordinates(lat: String, lon: String, completion: ((_ weatherData: Any?, _ error: Errors?) -> ())?) {
         let session = URLSession(configuration: .default)
         let url = URL(string: "https://api.weatherapi.com/v1/forecast.json?key=4d67135a96064f23bf673214232504&q=\(lat),\(lon)&days=3&aqi=no&alerts=no")
         if let unwrappedURL = url {
@@ -36,6 +25,10 @@ class DownloadManager {
                 
                 do {
                     let weatherData = try JSONDecoder().decode(Weather.self, from: data)
+                    if weatherData.current == nil {
+                        completion?(nil, Errors.unexpected)
+                        return
+                    }
                     completion?(weatherData, nil)
                 } catch {
                     print(error)
@@ -46,7 +39,7 @@ class DownloadManager {
         }
     }
     
-    func downloadWeatherDataFromString(location: String, completion: ((_ weatherData: Any?, _ error: Error?) -> ())?) {
+    func downloadWeatherDataFromString(location: String, completion: ((_ weatherData: Any?, _ error: Errors?) -> ())?) {
         let session = URLSession(configuration: .default)
         let url = URL(string: "https://api.weatherapi.com/v1/forecast.json?key=4d67135a96064f23bf673214232504&q=\(location)&days=3&aqi=no&alerts=no")
         if let unwrappedURL = url {
@@ -65,6 +58,10 @@ class DownloadManager {
                 }
                 do {
                     let weatherData = try JSONDecoder().decode(Weather.self, from: data)
+                    if weatherData.current == nil {
+                        completion?(nil, Errors.unexpected)
+                        return
+                    }
                     completion?(weatherData, nil)
                 } catch {
                     print(error)

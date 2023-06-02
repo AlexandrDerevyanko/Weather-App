@@ -1,9 +1,3 @@
-//
-//  MainView.swift
-//  WeatherApp
-//
-//  Created by Aleksandr Derevyanko on 18.04.2023.
-//
 
 import UIKit
 
@@ -292,24 +286,4 @@ class MainView: UIView {
         }
     }
     
-//    override func draw(_ rect: CGRect) {
-//        let rect1 = CGRect(x: 0, y: 0, width: rect.width, height: rect.height)
-//        drawCircular(in: rect1)
-//    }
-//
-//    private func drawCircular(in rect: CGRect) {
-//        let center =  CGPoint(x: rect.width / 2, y: rect.height - 40)
-//        let radius = (rect.width / 2) - 20
-//
-//        let path = UIBezierPath(arcCenter: center, radius: radius, startAngle: 0, endAngle: 3 * CGFloat.pi, clockwise: false)
-//
-//        path.lineWidth = 4
-//        path.lineCapStyle = .round
-//
-//        let color = UIColor.orange
-//        color.setStroke()
-//
-//        path.stroke()
-//    }
-//
 }

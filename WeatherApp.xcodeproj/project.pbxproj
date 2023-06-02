@@ -44,7 +44,6 @@
 		FFFF236A29E5453F0036F8EC /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFFF236929E5453F0036F8EC /* SettingsViewController.swift */; };
 		FFFF237029E697300036F8EC /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = FFFF236F29E697300036F8EC /* SnapKit */; };
 		FFFF237429E6D03F0036F8EC /* Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFFF237329E6D03F0036F8EC /* Custom.swift */; };
-		FFFF237629E81B850036F8EC /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFFF237529E81B850036F8EC /* TabBarController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -86,7 +85,6 @@
 		FFFF236729E5436B0036F8EC /* DayWeatherViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayWeatherViewController.swift; sourceTree = "<group>"; };
 		FFFF236929E5453F0036F8EC /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		FFFF237329E6D03F0036F8EC /* Custom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Custom.swift; sourceTree = "<group>"; };
-		FFFF237529E81B850036F8EC /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -217,7 +215,6 @@
 			children = (
 				FFFF234229E531070036F8EC /* AppDelegate.swift */,
 				FFFF234429E531070036F8EC /* SceneDelegate.swift */,
-				FFFF237529E81B850036F8EC /* TabBarController.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -345,7 +342,6 @@
 				FFFF236129E5427B0036F8EC /* MainViewController.swift in Sources */,
 				FFFF235A29E531500036F8EC /* CoreDataManager.swift in Sources */,
 				FF71E5EE2A1B955800E9DABA /* GeocoderJSON.swift in Sources */,
-				FFFF237629E81B850036F8EC /* TabBarController.swift in Sources */,
 				FF71E5C12A17A1DA00E9DABA /* PagesViewController.swift in Sources */,
 				FFFF234529E531070036F8EC /* SceneDelegate.swift in Sources */,
 				FF793CFC29F287890081E858 /* WeatherJSON.swift in Sources */,

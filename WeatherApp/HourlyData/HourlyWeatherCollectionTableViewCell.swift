@@ -1,9 +1,3 @@
-//
-//  CollectionTableViewCell.swift
-//  WeatherApp
-//
-//  Created by Aleksandr Derevyanko on 24.04.2023.
-//
 
 import UIKit
 import CoreData
@@ -68,11 +62,6 @@ extension HourlyWeatherCollectionTableViewCell: UICollectionViewDelegateFlowLayo
     
     private enum Constants {
         static var numberOfItemsInLIne: CGFloat {
-//            if timeFormat {
-//                return 5
-//            } else {
-//                return 6
-//            }
             return 6
         }
     }

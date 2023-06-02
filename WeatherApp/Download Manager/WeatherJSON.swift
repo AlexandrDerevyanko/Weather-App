@@ -1,9 +1,3 @@
-//
-//  JSON.swift
-//  WeatherApp
-//
-//  Created by Aleksandr Derevyanko on 21.04.2023.
-//
 
 import Foundation
 

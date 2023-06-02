@@ -1,9 +1,3 @@
-//
-//  CoreDataManager.swift
-//  WeatherApp
-//
-//  Created by Aleksandr Derevyanko on 11.04.2023.
-//
 
 import Foundation
 import CoreData
@@ -142,7 +136,7 @@ class CoreDataManager {
                             hourlyWeather.chanceOfRain = index.chanceOfRain ?? 0
                             hourlyWeather.text = index.condition?.text
                             hourlyWeather.windMph = index.windMph ?? 0
-                            hourlyWeather.windMps = index.windKph ?? 0
+                            hourlyWeather.windMps = ((index.windKph ?? 0) / 3.6)
                             hourlyWeather.uv = index.uv ?? 0
                             hourlyWeather.location = location
                         }
