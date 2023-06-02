@@ -276,9 +276,9 @@ class MainView: UIView {
                     self.weatherImage.image = UIImage(data: data)
                 }
             }
-            uvIndexLabel.text = "\(data.uv)"
+            uvIndexLabel.text = "\(Int(data.uv))"
             windSpeedLabel.text = "\(Int(data.windMps)) m/s"
-            dailyChanceOfRainLabel.text = "\(data.dailyChanceOfRain)%"
+            dailyChanceOfRainLabel.text = "\(Int(data.dailyChanceOfRain))%"
             dateLabel.text = "\(dateFormatter.string(from: data.date ?? Date()))"
             dateFormatter.dateStyle = .none
             sunriseLabel.text = "\(dateFormatter.string(from: data.sunrise ?? Date()))"

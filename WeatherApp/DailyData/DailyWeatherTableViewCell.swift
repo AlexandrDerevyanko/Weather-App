@@ -121,7 +121,7 @@ class DailyWeatherTableViewCell: UITableViewCell {
             }()
             dateLabel.text = "\(dateFormatter.string(from: data.date ?? Date()))"
             descriptionLabel.text = "\(String(describing: data.text ?? ""))"
-            dailyChanceOfRainLabel.text = "\(data.dailyChanceOfRain)%"
+            dailyChanceOfRainLabel.text = "\(Int(data.dailyChanceOfRain))%"
             if temperatureFormat {
                 minMaxAirTemperatureLabel.text = "\(Int(data.minTempF))°F / \(Int(data.maxTempF))°F"
             } else {
