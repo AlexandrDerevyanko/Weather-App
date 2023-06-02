@@ -228,7 +228,7 @@ class HourlyWeatherTableViewCell: UITableViewCell {
             }
             descriptionLabel.text = "\(String(describing: data.text ?? ""))"
             windSpeedValueLabel.text = "\(Int(data.windMps)) m/s"
-            dailyChanceOfRainValueLabel.text = "\(data.chanceOfRain)%"
+            dailyChanceOfRainValueLabel.text = "\(Int(data.chanceOfRain))%"
             uvValueLabel.text = "\(data.uv)"
         }
     }
